@@ -3,7 +3,7 @@ from dataclasses import dataclass, field
 from typing import Optional
 from __seedwork.domain.entities import Entity
 
-@dataclass(kw_only=True, frozen=True, slots=True)
+@dataclass(kw_only=True, frozen=True)
 class Category(Entity):
     name: str
     description: Optional[str] = None
