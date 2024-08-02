@@ -1,10 +1,48 @@
-from dataclasses import FrozenInstanceError, is_dataclass
+from abc import ABC
+from dataclasses import FrozenInstanceError, dataclass, is_dataclass
 import unittest
 from unittest.mock import patch
 from __seedwork.domain.exceptions import InvalidUuidException
-from __seedwork.domain.value_objects import UniqueEntityId
+from __seedwork.domain.value_objects import UniqueEntityId, ValueObject
 import uuid
 
+
+@dataclass(frozen=True)
+class StubOneProb(ValueObject):
+    prop: str
+    
+@dataclass(frozen=True)
+class StubTwoProb(ValueObject):
+    prop1: str
+    prop2: str
+
+class TestValueObjectUnit(unittest.TestCase):
+    def test_if_is_a_dataclass(self):
+        self.assertTrue(is_dataclass(ValueObject))
+        
+    def test_if_is_a_abstract_class(self):
+        self.assertIsInstance(ValueObject(), ABC)
+        
+    def test_init_prop(self):
+        value_object = StubOneProb(prop='prop-value')
+        self.assertEqual(value_object.prop, 'prop-value')
+        
+        value_object = StubTwoProb(prop1='prop1-value', prop2='prop2-value')
+        self.assertEqual(value_object.prop1, 'prop1-value')
+        self.assertEqual(value_object.prop2, 'prop2-value')
+        
+    def test_if_convert_to_string(self):
+        value_object = StubOneProb(prop='prop-value')
+        self.assertEqual(value_object.prop, str(value_object))
+        
+        value_object = StubTwoProb(prop1='prop1-value', prop2='prop2-value')
+        self.assertEqual('{"prop1": "prop1-value", "prop2": "prop2-value"}', str(value_object))
+
+    def test_is_immutable(self):
+        with self.assertRaises(FrozenInstanceError):
+            value_object = StubOneProb(prop='value')
+            value_object.prop = 'value 2'
+       
 class TestUniqueIdentityIdUnit(unittest.TestCase):
     def test_if_is_a_dataclass(self):
         self.assertTrue(is_dataclass(UniqueEntityId))
