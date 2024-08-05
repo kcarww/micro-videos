@@ -148,5 +148,4 @@ class TestValidatorRules(unittest.TestCase):
             'value', 'prop').required().string().max_length(5)
         ValidatorRules.values(True, 'prop').required().boolean()
         ValidatorRules.values(False, 'prop').required().boolean()
-        
         self.assertTrue(True)
