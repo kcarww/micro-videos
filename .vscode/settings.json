@@ -5,7 +5,7 @@
         "${workspaceFolder}/src",
         "${workspaceFolder}/__pypackages__/3.10/lib"
     ],
-    "python.analysis.autoImportCompletions": false,
+    "python.analysis.autoImportCompletions": true,
     "python.analysis.typeCheckingMode": "off",
     "python.autoComplete.extraPaths": [
         "${workspaceFolder}/__pypackages__/3.10/lib"
