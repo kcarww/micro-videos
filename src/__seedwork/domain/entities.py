@@ -1,17 +1,22 @@
 from abc import ABC
 from dataclasses import dataclass, field, asdict
+from typing import Any
 
 from __seedwork.domain.value_objects import UniqueEntityId
 
-@dataclass(frozen=True)
+
+@dataclass(frozen=True, slots=True)
 class Entity(ABC):
-    
+
     unique_entity_id: UniqueEntityId = field(default_factory=UniqueEntityId)
-    
+
     @property
     def id(self):
         return str(self.unique_entity_id)
-
+    
+    def _set(self, name: str, value: Any):
+        object.__setattr__(self, name, value)
+        return self
 
     def to_dict(self):
         entity_dict = asdict(self)
