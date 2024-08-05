@@ -5,3 +5,5 @@ __pycache__/
 venv/
 .venv/
 
+src/category/domain/__pycache__/entities.cpython-310.pyc
+src/category/domain/__pycache__/entities.cpython-310.pyc
