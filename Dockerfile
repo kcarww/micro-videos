@@ -7,6 +7,8 @@ RUN apt-get update && \
 
 RUN useradd -ms /bin/bash python
 
+RUN pip install pdm
+
 USER python
 
 WORKDIR /home/python/app

@@ -5,7 +5,10 @@ description = "Default template for PDM package"
 authors = [
     {name = "Carlos", email = "carlos.oe.cc@gmail.com"},
 ]
-dependencies = []
+dependencies = [
+    "autopep8>=2.3.1",
+    "pytest>=8.3.2",
+]
 requires-python = "==3.10.*"
 readme = "README.md"
 license = {text = "MIT"}
