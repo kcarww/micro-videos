@@ -2,7 +2,11 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Any, Dict, Generic, List, TypeVar
 from rest_framework.serializers import Serializer
+from django.conf import settings
 from __seedwork.domain.exceptions import ValidationException
+
+if not settings.configured:
+    settings.configure(USE_I18N=False)
 
 @dataclass(frozen=True, slots=True)
 class ValidatorRules:
@@ -49,6 +53,17 @@ class ValidatorFieldsInterface(ABC, Generic[PropsValidated]):
         raise NotImplementedError()
 
 
-class DRFValidator(ValidatorFieldsInterface[PropsValidated]):
-    def validate(self, serializer: Serializer):
-        serializer.is_valid()
+# pylint: disable=too-few-public-methods
+class DRFValidator(ValidatorFieldsInterface[PropsValidated], ABC):
+    def validate(self, data: Serializer) -> bool:
+        serializer = data
+        is_valid = serializer.is_valid()
+        if not is_valid:
+            self.errors = {
+                field: [str(_error) for _error in _errors]
+                for field, _errors in serializer.errors.items()
+            }
+            return False
+
+        self.validated_data = dict(serializer.validated_data)
+        return True

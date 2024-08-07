@@ -1,8 +1,11 @@
 version: '3'
 
-services: 
-  app: 
+services:
+  app:
     build: .
     container_name: micro-videos
-    volumes: 
+    volumes:
       - .:/home/python/app
+    environment:
+      - PYTHONPATH=/home/python/app/src
+    command: ["tail", "-f", "/dev/null"]

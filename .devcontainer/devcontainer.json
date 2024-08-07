@@ -1,20 +1,17 @@
-// For format details, see https://aka.ms/devcontainer.json. For config options, see the
-// README at: https://github.com/devcontainers/templates/tree/main/src/docker-existing-docker-compose
 {
 	"name": "Micro videos Python",
 
 	// Update the 'dockerComposeFile' list if you have more compose files or use different names.
 	// The .devcontainer/docker-compose.yml file contains any overrides you need/want to make.
 	"dockerComposeFile": [
-		"../docker-compose.yaml",
-		"docker-compose.yml"
+		"../docker-compose.yaml"
 	],
 
-	// The 'service' property is the name of the service for the container that VS Code should
-	// use. Update this value and .devcontainer/docker-compose.yml to the real service name.
+	// The 'service' property is the name of the service for the container that VS Code should use.
+	// Update this value and .devcontainer/docker-compose.yml to the real service name.
 	"service": "app",
 
-	// The optional ' workspaceFolder' property is the path VS Code should open by default when
+	// The optional 'workspaceFolder' property is the path VS Code should open by default when
 	// connected. This is typically a file mount in .devcontainer/docker-compose.yml
 	"workspaceFolder": "/home/python/app",
 
@@ -35,13 +32,21 @@
 
 	// Configure tool-specific properties.
 	"customizations": {
-		"extensions": [
-
-		]
+		"vscode": {
+			"extensions": [
+				"ms-python.python",
+				"ms-azuretools.vscode-docker"
+			],
+			"settings": {
+				"python.defaultInterpreterPath": "/home/python/app/.venv/bin/python",
+				"python.venvPath": "/home/python/app/.venv",
+				"python.linting.enabled": true,
+				"python.linting.pylintEnabled": true,
+				"python.formatting.provider": "black"
+			}
+		}
 	},
 
 	// Uncomment to connect as an existing user other than the container default. More info: https://aka.ms/dev-containers-non-root.
 	"remoteUser": "python"
-
-
 }
