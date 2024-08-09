@@ -1,12 +1,15 @@
 from abc import ABC, abstractmethod
+import contextlib
 from dataclasses import dataclass
 from typing import Any, Dict, Generic, List, TypeVar
 from rest_framework.serializers import Serializer
+from rest_framework.fields import CharField, BooleanField
 from django.conf import settings
 from __seedwork.domain.exceptions import ValidationException
 
 if not settings.configured:
     settings.configure(USE_I18N=False)
+
 
 @dataclass(frozen=True, slots=True)
 class ValidatorRules:
@@ -67,3 +70,21 @@ class DRFValidator(ValidatorFieldsInterface[PropsValidated], ABC):
 
         self.validated_data = dict(serializer.validated_data)
         return True
+
+
+class StrictCharField(CharField):
+    def to_internal_value(self, data):
+        if not isinstance(data, str):
+            self.fail('invalid')
+        return super().to_internal_value(data)
+
+
+class StrictBooleanField(BooleanField):
+    def to_internal_value(self, data):
+        with contextlib.suppress(TypeError):
+            if data is True or data is False:
+                return data
+            if data is None and self.allow_null:
+                return None
+
+        self.fail('invalid', input=data)
