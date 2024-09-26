@@ -1,12 +1,16 @@
 import unittest
 from dataclasses import dataclass
-from typing import Optional
-from __seedwork.domain.repositories import RepositoryInterface
+from typing import Optional, List
 from __seedwork.domain.entities import Entity
-from __seedwork.domain.repositories import InMemoryRepository
 from __seedwork.domain.exceptions import NotFoundException
 from __seedwork.domain.value_objects import UniqueEntityId
-from __seedwork.domain.repositories import SearchableRepositoryInterface, SearchParams, Filter
+from __seedwork.domain.repositories import (SearchableRepositoryInterface,
+                                            SearchParams,
+                                            Filter,
+                                            SearchResult,
+                                            InMemoryRepository,
+                                            RepositoryInterface,
+                                            ET)
 
 
 class TestRepositoryInterface(unittest.TestCase):
@@ -140,11 +144,11 @@ class TestSearchParams(unittest.TestCase):
             {'page': "", 'expected': 1},
             {'page': "teste", 'expected': 1},
         ]
-        
+
         for i in arrange:
             params = SearchParams(page=i['page'])
             self.assertEqual(params.page, i['expected'])
-            
+
     def test_per_page_prop(self):
         params = SearchParams()
         arrange = [
@@ -158,11 +162,11 @@ class TestSearchParams(unittest.TestCase):
             {'per_page': -1, 'expected': 15},
             {'per_page': True, 'expected': 1},
         ]
-        
+
         for i in arrange:
             params = SearchParams(per_page=i['per_page'])
             self.assertEqual(params.per_page, i['expected'])
-    
+
     def test_sort_prop(self):
         params = SearchParams()
         self.assertIsNone(params.sort)
@@ -173,15 +177,15 @@ class TestSearchParams(unittest.TestCase):
             {'sort': 'ASC', 'expected': 'ASC'},
             {'sort': "", 'expected': None},
         ]
-        
+
         for i in arrange:
             params = SearchParams(sort=i['sort'])
             self.assertEqual(params.sort, i['expected'])
-            
+
     def test_sort_dir_prop(self):
         params = SearchParams()
         self.assertIsNone(params.sort_dir)
-        
+
         arrange = [
             {'sort_dir': 0, 'expected': 'asc'},
             {'sort_dir': 1, 'expected': 'asc'},
@@ -191,12 +195,12 @@ class TestSearchParams(unittest.TestCase):
             {'sort_dir': 'asc', 'expected': 'asc'},
             {'sort_dir': "", 'expected': 'asc'},
             {'sort_dir': None, 'expected': 'asc'},
-            
+
         ]
         for i in arrange:
             params = SearchParams(sort_dir=i['sort_dir'], sort='name')
             self.assertEqual(params.sort_dir, i['expected'])
-            
+
     def test_filter_prop(self):
         params = SearchParams()
         self.assertIsNone(params.filter)
@@ -206,9 +210,57 @@ class TestSearchParams(unittest.TestCase):
             {'filter': 1, 'expected': '1'},
             {'filter': 'ASC', 'expected': 'ASC'},
             {'filter': "", 'expected': None},
-            
+
         ]
-        
+
         for i in arrange:
             params = SearchParams(filter=i['filter'])
             self.assertEqual(params.filter, i['expected'])
+
+
+class TestSearchResult(unittest.TestCase):
+    def test_props_annotations(self):
+        self.assertEqual(SearchResult.__annotations__, {
+            'items': List[ET],
+            'total': int,
+            'current_page': int,
+            'per_page': int,
+            'last_page': int,
+            'sort': Optional[str],
+            'sort_dir': Optional[str],
+            'filter': Optional[Filter]
+        })
+
+    def test_constructor(self):
+        entity = StubEntity(name='fake', price=5)
+        result = SearchResult(items=[entity, entity],
+                              total=4,
+                              current_page=1,
+                              per_page=2,
+                              )
+
+        self.assertDictEqual(result.to_dict(), {
+            'items': [entity, entity],
+            'total': 4,
+            'current_page': 1,
+            'per_page': 2,
+            'last_page': 2,
+            'sort': None,
+            'sort_dir': None,
+            'filter': None
+        })
+    
+    
+    def test_when_per_page_is_greater_than_total(self):
+        result = SearchResult(items=[],
+                              total=4,
+                              per_page=15,
+                              current_page=1)
+        self.assertEqual(result.last_page, 1)
+        
+    def test_when_per_page_is_less_than_total_and_they_are_not_multiples(self):
+        result = SearchResult(items=[],
+                              total=101,
+                              per_page=20,
+                              current_page=1)
+        self.assertEqual(result.last_page, 6)
