@@ -31,10 +31,11 @@ class TestCategoryUnit(unittest.TestCase):
             category1 = Category(name='Movies')
             mock_validate_method.assert_called_once()
             import time
-            time.sleep(1)
+            time.sleep(0.001)
             category2 = Category(name='Movies')
             self.assertNotEqual(category1.created_at.timestamp(),
                                 category2.created_at.timestamp())
+
 
     def test_is_immutable(self):
         with patch.object(Category, 'validate'):
