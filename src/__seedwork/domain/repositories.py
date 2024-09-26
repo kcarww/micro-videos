@@ -195,9 +195,11 @@ class InMemorySearchableRepository(
         raise NotImplementedError()
     
     def _apply_sort(self, items: List[ET], sort: str | None, sort_dir: str | None) -> List[ET]:
+        
         if sort and sort in self.sortable_fields:
+            
             is_reverse = sort_dir == 'desc'
-            return sorted(items, key=lambda item: getattr(item, sort), reverse=is_reverse)
+            return sorted(items, key=lambda item: getattr(item, sort), reverse=is_reverse)    
         return items
         
     def _apply_pagination(self, items: List[ET], page: int, per_page: int) -> List[ET]:
