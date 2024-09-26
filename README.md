@@ -1,7 +1,7 @@
-# Montagem do ambiente de desenvolvimento (Docker e IDE)
-# Criar uma aplicação Python
-# Criar entidade de Categoria
-# Criar Testes
+# [x] Montagem do ambiente de desenvolvimento (Docker e IDE)
+# [x] Criar uma aplicação Python
+# [x] Criar entidade de Categoria
+# [x] Criar Testes
 # Criar casos de uso e repositório
 # Criar Testes
 
