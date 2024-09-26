@@ -79,7 +79,9 @@ class SearchParams(Generic[Filter]):
             self.sort_dir = None
             return
         sort_dir = str(self.sort_dir).lower()
+
         self.sort_dir = 'asc' if sort_dir not in ['asc', 'desc'] else sort_dir
+
         
     def _normalize_filter(self):
         self.filter = None if self.filter == "" or self.filter is None else str(self.filter)
@@ -87,10 +89,9 @@ class SearchParams(Generic[Filter]):
     def _convert_to_int(self, value: Any, default=0) -> int:
         try:
             return int(value)
-        except ValueError:
+        except (ValueError, TypeError):
             return default
-        except TypeError:
-            return default
+
         
     def _get_dataclass_field(self, field_name):
         # pylint: disable=no-member
