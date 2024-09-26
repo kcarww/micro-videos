@@ -30,6 +30,8 @@ class TestCategoryUnit(unittest.TestCase):
         with patch.object(Category, 'validate') as mock_validate_method:
             category1 = Category(name='Movies')
             mock_validate_method.assert_called_once()
+            import time
+            time.sleep(1)
             category2 = Category(name='Movies')
             self.assertNotEqual(category1.created_at.timestamp(),
                                 category2.created_at.timestamp())

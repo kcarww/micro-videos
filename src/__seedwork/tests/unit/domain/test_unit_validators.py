@@ -159,7 +159,7 @@ class TestValidatorFieldsInterfaceUnit(unittest.TestCase):
         with self.assertRaises(TypeError) as assert_erro:
             ValidatorFieldsInterface()
         self.assertEqual(assert_erro.exception.args[0],
-                         "Can't instantiate abstract class ValidatorFieldsInterface with abstract method validate")
+                         "Can't instantiate abstract class ValidatorFieldsInterface without an implementation for abstract method 'validate'")
 
     def test_get_validator_fields(self):
         fields_validator = fields(ValidatorFieldsInterface)

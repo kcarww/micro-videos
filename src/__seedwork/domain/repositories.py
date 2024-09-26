@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Generic, List, TypeVar
 
 from __seedwork.domain.entities import Entity
@@ -33,8 +33,9 @@ class RepositoryInterface(Generic[ET], ABC):
         raise NotImplementedError()
 
 
-class InMemoryRepository(ABC, RepositoryInterface[ET]):
-    items: List[ET] = []
+@dataclass(slots=True)
+class InMemoryRepository(RepositoryInterface[ET], ABC):
+    items: List[ET] = field(default_factory=lambda: [])
     
     def insert(self, entity: ET) -> None:
         self.items.append(entity)
