@@ -2,6 +2,7 @@ import unittest
 from typing import Optional
 from unittest.mock import patch
 from __seedwork.domain.exceptions import NotFoundException
+from category.application.dto import CategoryOutput
 from category.application.use_cases import CreateCategoryUseCase, GetCategoryUseCase
 from category.domain.entities import Category
 from category.infra.repositories import CategoryInMemoryRepository
@@ -38,7 +39,7 @@ class TestCreateCategoryUseCaseUnit(unittest.TestCase):
             input_param = CreateCategoryUseCase.Input(name='Movie')
             output = self.use_case.execute(input_param)
             spy_insert.assert_called_once()
-            self.assertEqual(output, CreateCategoryUseCase.Output(
+            self.assertEqual(output, CategoryOutput(
                 id=self.category_repo.items[0].id,
                 name='Movie',
                 description=None,
@@ -46,28 +47,28 @@ class TestCreateCategoryUseCaseUnit(unittest.TestCase):
                 created_at=self.category_repo.items[0].created_at
             ))
             
-        # input_param = CreateCategoryUseCase.Input(name='teste',
-        #                                           description='some')
-        # output = self.use_case.execute(input_param)
-        # self.assertEqual(output, CreateCategoryUseCase.Output(
-        #     id=self.category_repo.items[1].id,
-        #     name='teste',
-        #     description='some',
-        #     is_active=True,
-        #     created_at=self.category_repo.items[1].created_at
-        # ))
+        input_param = CreateCategoryUseCase.Input(name='teste',
+                                                  description='some')
+        output = self.use_case.execute(input_param)
+        self.assertEqual(output, CategoryOutput(
+            id=self.category_repo.items[1].id,
+            name='teste',
+            description='some',
+            is_active=True,
+            created_at=self.category_repo.items[1].created_at
+        ))
         
-        # input_param = CreateCategoryUseCase.Input(name='teste',
-        #                                           description='some',
-        #                                           is_active=False)
-        # output = self.use_case.execute(input_param)
-        # self.assertEqual(output, CreateCategoryUseCase.Output(
-        #     id=self.category_repo.items[2].id,
-        #     name='teste',
-        #     description='some',
-        #     is_active=False,
-        #     created_at=self.category_repo.items[2].created_at
-        # ))
+        input_param = CreateCategoryUseCase.Input(name='teste',
+                                                  description='some',
+                                                  is_active=False)
+        output = self.use_case.execute(input_param)
+        self.assertEqual(output, CategoryOutput(
+            id=self.category_repo.items[2].id,
+            name='teste',
+            description='some',
+            is_active=False,
+            created_at=self.category_repo.items[2].created_at
+        ))
         
         
         
@@ -101,7 +102,7 @@ class TestGetCategoryUseCaseUnit(unittest.TestCase):
             input_param = GetCategoryUseCase.Input(id=category.id)
             output = self.use_case.execute(input_param)
             spy_find_by_id.assert_called_once()
-            self.assertEqual(output, GetCategoryUseCase.Output(
+            self.assertEqual(output, CategoryOutput(
                 id=self.category_repo.items[0].id,
                 name='Movie',
                 description=None,
