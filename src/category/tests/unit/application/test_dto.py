@@ -2,7 +2,10 @@ from datetime import datetime
 from typing import Optional
 import unittest
 
-from category.application.dto import CategoryOutput
+import category
+from category.application.dto import CategoryOutput, CategoryOutputMapper
+from category.domain.entities import Category
+
 
 class TestCategoryOutputUnit(unittest.TestCase):
     def test_fields(self):
@@ -13,3 +16,25 @@ class TestCategoryOutputUnit(unittest.TestCase):
             'is_active': bool,
             'created_at': datetime
         })
+        
+        
+class TestCategoryOutputMapperUnit(unittest.TestCase):
+    def test_to_output(self):
+        created_at = datetime.now()
+        category = Category(name='test',
+                            description='some',
+                            is_active=True,
+                            created_at=created_at)
+        output = CategoryOutputMapper.to_output(category)
+        self.assertEqual(output, CategoryOutput(
+            id=category.id,
+            name=category.name,
+            description=category.description,
+            is_active=category.is_active,
+            created_at=category.created_at
+        ))
+        
+        
+        
+
+        

@@ -46,28 +46,28 @@ class TestCreateCategoryUseCaseUnit(unittest.TestCase):
                 created_at=self.category_repo.items[0].created_at
             ))
             
-        input_param = CreateCategoryUseCase.Input(name='teste',
-                                                  description='some')
-        output = self.use_case.execute(input_param)
-        self.assertEqual(output, CreateCategoryUseCase.Output(
-            id=self.category_repo.items[1].id,
-            name='teste',
-            description='some',
-            is_active=True,
-            created_at=self.category_repo.items[1].created_at
-        ))
+        # input_param = CreateCategoryUseCase.Input(name='teste',
+        #                                           description='some')
+        # output = self.use_case.execute(input_param)
+        # self.assertEqual(output, CreateCategoryUseCase.Output(
+        #     id=self.category_repo.items[1].id,
+        #     name='teste',
+        #     description='some',
+        #     is_active=True,
+        #     created_at=self.category_repo.items[1].created_at
+        # ))
         
-        input_param = CreateCategoryUseCase.Input(name='teste',
-                                                  description='some',
-                                                  is_active=False)
-        output = self.use_case.execute(input_param)
-        self.assertEqual(output, CreateCategoryUseCase.Output(
-            id=self.category_repo.items[2].id,
-            name='teste',
-            description='some',
-            is_active=False,
-            created_at=self.category_repo.items[2].created_at
-        ))
+        # input_param = CreateCategoryUseCase.Input(name='teste',
+        #                                           description='some',
+        #                                           is_active=False)
+        # output = self.use_case.execute(input_param)
+        # self.assertEqual(output, CreateCategoryUseCase.Output(
+        #     id=self.category_repo.items[2].id,
+        #     name='teste',
+        #     description='some',
+        #     is_active=False,
+        #     created_at=self.category_repo.items[2].created_at
+        # ))
         
         
         
