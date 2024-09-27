@@ -25,8 +25,8 @@ class CreateCategoryUseCase:
     @dataclass(slots=True, frozen=True)
     class Input:
         name: str
-        description: Optional[str] = None
-        is_active: Optional[bool] = True
+        description: Optional[str] = Category.get_field('description').default
+        is_active: Optional[bool] = Category.get_field('is_active').default
         
     @dataclass(slots=True, frozen=True)
     class Output:

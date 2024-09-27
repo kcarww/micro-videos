@@ -21,5 +21,15 @@
     "python.testing.autoTestDiscoverOnSaveEnabled": true,
     "terminal.integrated.env.windows": {
         "PYTHONPATH": "${workspaceFolder}/src"
-    }
+    },
+    "python.languageServer": "Pylance",
+    "editor.quickSuggestions": {
+        "other": "on",
+        "comments": "off",
+        "strings": "on"
+    },
+    "editor.suggestOnTriggerCharacters": true,
+    "editor.wordBasedSuggestions": "off",
+    "python.analysis.autoSearchPaths": true,
+    "python.analysis.useLibraryCodeForTypes": true
 }

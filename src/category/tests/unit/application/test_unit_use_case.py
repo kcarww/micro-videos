@@ -1,6 +1,8 @@
 import unittest
+from typing import Optional
 from unittest.mock import patch
 from category.application.use_cases import CreateCategoryUseCase
+from category.domain.entities import Category
 from category.infra.repositories import CategoryInMemoryRepository
 
 
@@ -11,6 +13,22 @@ class TestCreateCategoryUseCaseUnit(unittest.TestCase):
     def setUp(self):
         self.category_repo = CategoryInMemoryRepository()
         self.use_case = CreateCategoryUseCase(self.category_repo)
+        
+    def test_input(self):
+        self.assertEqual(CreateCategoryUseCase.Input.__annotations__, 
+                         {
+                             'name': str,
+                             'description': Optional[str],
+                             'is_active': Optional[bool]
+                         })
+        #pylint: disable=E1101
+        description_field = CreateCategoryUseCase.Input.__dataclass_fields__['description']
+        self.assertEqual(description_field.default, Category.get_field('description').default)
+        
+        
+        is_active_field = CreateCategoryUseCase.Input.__dataclass_fields__['is_active']
+        self.assertEqual(is_active_field.default, Category.get_field('is_active').default)
+        
         
     def test_execute(self):
         with patch.object(self.category_repo,
