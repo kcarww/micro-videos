@@ -1,12 +1,13 @@
 from dataclasses import dataclass
 from typing import Optional
+from __seedwork.application.use_cases import UseCase
 from category.application.dto import CategoryOutput, CategoryOutputMapper
 from category.domain.entities import Category
 from category.domain.repositories import CategoryRepository
 
 
 @dataclass(slots=True, frozen=True)
-class CreateCategoryUseCase:
+class CreateCategoryUseCase(UseCase):
     
     category_repo: CategoryRepository
     
@@ -34,7 +35,7 @@ class CreateCategoryUseCase:
         
 
 @dataclass(slots=True, frozen=True)
-class GetCategoryUseCase:
+class GetCategoryUseCase(UseCase):
     
     category_repo: CategoryRepository
     
