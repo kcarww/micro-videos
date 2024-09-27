@@ -14,7 +14,7 @@ from __seedwork.domain.repositories import (SearchableRepositoryInterface,
                                             ET)
 
 
-class TestRepositoryInterface(unittest.TestCase):
+class TestRepositoryInterfaceUnit(unittest.TestCase):
     def test_throw_error_when_methods_not_implemented(self):
         with self.assertRaises(TypeError) as assert_error:
             RepositoryInterface()
@@ -32,7 +32,7 @@ class StubInMemoryRepository(InMemoryRepository[StubEntity]):
     pass
 
 
-class TestInMemoryRepository(unittest.TestCase):
+class TestInMemoryRepositoryUnit(unittest.TestCase):
     repo: StubInMemoryRepository
 
     def setUp(self):
@@ -116,7 +116,7 @@ class TestInMemoryRepository(unittest.TestCase):
         self.assertTrue(entity not in self.repo.items)
 
 
-class TestSearchableRepositoryInterface(unittest.TestCase):
+class TestSearchableRepositoryInterfaceUnit(unittest.TestCase):
     def test_throw_error_when_methods_not_implemeneted(self):
         with self.assertRaises(TypeError) as assert_error:
             SearchableRepositoryInterface()
@@ -126,7 +126,7 @@ class TestSearchableRepositoryInterface(unittest.TestCase):
     def test_if_sortable_field_is_empty(self):
         self.assertEqual(SearchableRepositoryInterface.sortable_fields, [])
 
-class TestSearchParams(unittest.TestCase):
+class TestSearchParamsUnit(unittest.TestCase):
     def test_props_annotations(self):
         self.assertEqual(SearchParams.__annotations__,
                          {
@@ -221,7 +221,7 @@ class TestSearchParams(unittest.TestCase):
             self.assertEqual(params.filter, i['expected'])
 
 
-class TestSearchResult(unittest.TestCase):
+class TestSearchResultUnit(unittest.TestCase):
     def test_props_annotations(self):
         self.assertEqual(SearchResult.__annotations__, {
             'items': List[ET],
@@ -279,7 +279,7 @@ class StubInMemorySearchableRepository(InMemorySearchableRepository[StubEntity, 
         return items
     
     
-class TestInMemorySearchableRepository(unittest.TestCase):
+class TestInMemorySearchableRepositoryUnit(unittest.TestCase):
     repo: StubInMemorySearchableRepository
     
     def setUp(self):

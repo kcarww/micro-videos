@@ -25,8 +25,8 @@ class CreateCategoryUseCase:
     @dataclass(slots=True, frozen=True)
     class Input:
         name: str
-        description: Optional[str]
-        is_active: Optional[bool]
+        description: Optional[str] = None
+        is_active: Optional[bool] = True
         
     @dataclass(slots=True, frozen=True)
     class Output:
