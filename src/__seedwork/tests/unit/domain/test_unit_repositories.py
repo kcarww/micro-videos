@@ -50,14 +50,14 @@ class TestInMemoryRepositoryUnit(unittest.TestCase):
         with self.assertRaises(NotFoundException) as assert_error:
             self.repo.find_by_id('fake_id')
         self.assertEqual(
-            assert_error.exception.args[0], "Entity not using ID 'fake_id'")
+            assert_error.exception.args[0], "Entity not found using ID 'fake_id'")
 
         unique_entity_id = UniqueEntityId(
             'adea742e-b317-44bd-8236-5c104cb0dce3')
         with self.assertRaises(NotFoundException) as assert_error:
             self.repo.find_by_id(unique_entity_id)
         self.assertEqual(
-            assert_error.exception.args[0], "Entity not using ID 'adea742e-b317-44bd-8236-5c104cb0dce3'")
+            assert_error.exception.args[0], "Entity not found using ID 'adea742e-b317-44bd-8236-5c104cb0dce3'")
 
     def test_find_by_id(self):
         entity = StubEntity(name="test", price=10.0)
@@ -81,12 +81,12 @@ class TestInMemoryRepositoryUnit(unittest.TestCase):
         with self.assertRaises(NotFoundException) as assert_error:
             self.repo.find_by_id(entity.id)
         self.assertEqual(
-            assert_error.exception.args[0], f"Entity not using ID '{entity.id}'")
+            assert_error.exception.args[0], f"Entity not found using ID '{entity.id}'")
 
         with self.assertRaises(NotFoundException) as assert_error:
             self.repo.find_by_id(entity.unique_entity_id)
         self.assertEqual(
-            assert_error.exception.args[0], f"Entity not using ID '{entity.id}'")
+            assert_error.exception.args[0], f"Entity not found using ID '{entity.id}'")
 
     def test_update(self):
         entity = StubEntity(name="test", price=10.0)
@@ -102,12 +102,12 @@ class TestInMemoryRepositoryUnit(unittest.TestCase):
         with self.assertRaises(NotFoundException) as assert_error:
             self.repo.delete(entity.id)
         self.assertEqual(
-            assert_error.exception.args[0], f"Entity not using ID '{entity.id}'")
+            assert_error.exception.args[0], f"Entity not found using ID '{entity.id}'")
 
         with self.assertRaises(NotFoundException) as assert_error:
             self.repo.delete(entity.unique_entity_id)
         self.assertEqual(
-            assert_error.exception.args[0], f"Entity not using ID '{entity.id}'")
+            assert_error.exception.args[0], f"Entity not found using ID '{entity.id}'")
 
     def test_delete(self):
         entity = StubEntity(name="test", price=10.0)

@@ -161,7 +161,7 @@ class InMemoryRepository(RepositoryInterface[ET], ABC):
         id_str = str(entity_id)
         entity = next(filter(lambda x: x.id == id_str, self.items), None)
         if not entity:
-            raise NotFoundException(f"Entity not using ID '{entity_id}'")
+            raise NotFoundException(f"Entity not found using ID '{entity_id}'")
         return entity
 
 
