@@ -7,7 +7,7 @@ from __seedwork.application.dto import PaginationOutput, SearchInput
 from __seedwork.application.use_cases import UseCase
 from __seedwork.domain.exceptions import NotFoundException
 from category.application.dto import CategoryOutput, CategoryOutputMapper
-from category.application.use_cases import CreateCategoryUseCase, GetCategoryUseCase, ListCategoriesUseCase, UpdateCategoryUseCase
+from category.application.use_cases import CreateCategoryUseCase, DeleteCategoryUseCase, GetCategoryUseCase, ListCategoriesUseCase, UpdateCategoryUseCase
 from category.domain.entities import Category
 from category.domain.repositories import CategoryRepository
 from category.infra.repositories import CategoryInMemoryRepository
@@ -433,3 +433,42 @@ class TestUpdateCategoryUseCase(unittest.TestCase):
                 response,
                 UpdateCategoryUseCase.Output(**i['expected'])
             )
+            
+            
+            
+class TestDeleteCategoryUseCase(unittest.TestCase):
+
+    use_case: DeleteCategoryUseCase
+    category_repo: CategoryRepository
+
+    def setUp(self) -> None:
+        self.category_repo = CategoryInMemoryRepository()
+        self.use_case = DeleteCategoryUseCase(self.category_repo)
+
+    def test_instance_use_case(self):
+        self.assertIsInstance(self.use_case, UseCase)
+
+    def test_input(self):
+        self.assertEqual(DeleteCategoryUseCase.Input.__annotations__, {
+            'id': str
+        })
+
+    def test_throw_exception_when_category_not_found(self):
+        request = DeleteCategoryUseCase.Input(id='not_found')
+        with self.assertRaises(NotFoundException) as assert_error:
+            self.use_case.execute(request)
+        self.assertEqual(
+            assert_error.exception.args[0], "Entity not found using ID 'not_found'")
+
+    def test_execute(self):
+        category = Category(name='test')
+        self.category_repo.items = [category]
+        with patch.object(
+            self.category_repo,
+            'delete',
+            wraps=self.category_repo.delete
+        ) as spy_delete:
+            request = DeleteCategoryUseCase.Input(id=category.id)
+            self.use_case.execute(request)
+            spy_delete.assert_called_once()
+            self.assertCountEqual(self.category_repo.items, [])
