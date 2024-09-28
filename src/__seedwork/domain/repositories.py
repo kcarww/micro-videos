@@ -1,6 +1,6 @@
 import math
 from abc import ABC, abstractmethod
-from dataclasses import dataclass, field
+from dataclasses import Field, dataclass, field
 from typing import Generic, List, TypeVar, Any, Optional
 
 from __seedwork.domain.entities import Entity
@@ -101,7 +101,8 @@ class SearchParams(Generic[Filter]):
     def _get_dataclass_field(self, field_name):
         # pylint: disable=no-member
         return SearchParams.__dataclass_fields__[field_name]
-
+    
+    
 
 @dataclass(slots=True, kw_only=True, frozen=True)
 class SearchResult(Generic[ET, Filter]):
@@ -180,6 +181,7 @@ class InMemorySearchableRepository(
         items_sorted = self._apply_sort(items_filtered, input_params.sort, input_params.sort_dir)
         items_paginated = self._apply_pagination(items_sorted, input_params.page, input_params.per_page)
         
+        
         return SearchResult(
             items = items_paginated,
             total = len(items_filtered),
@@ -195,11 +197,10 @@ class InMemorySearchableRepository(
         raise NotImplementedError()
     
     def _apply_sort(self, items: List[ET], sort: str | None, sort_dir: str | None) -> List[ET]:
-        
         if sort and sort in self.sortable_fields:
-            
             is_reverse = sort_dir == 'desc'
             return sorted(items, key=lambda item: getattr(item, sort), reverse=is_reverse)    
+        
         return items
         
     def _apply_pagination(self, items: List[ET], page: int, per_page: int) -> List[ET]:

@@ -17,6 +17,7 @@ class CategoryInMemoryRepository(CategoryRepository, InMemorySearchableRepositor
         return items
 
     def _apply_sort(self, items: List[Category], sort: str = None, sort_dir: str = None ) -> List[Category]: 
+        print()
         if sort:
             return super()._apply_sort(items, sort, sort_dir)
         
