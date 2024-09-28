@@ -1,9 +1,9 @@
+from __seedwork.domain.exceptions import InvalidUuidException
 from abc import ABC
 import uuid
 import unittest
 from dataclasses import FrozenInstanceError, dataclass, is_dataclass
 from unittest.mock import patch
-from __seedwork.domain.exceptions import InvalidUuidException
 from __seedwork.domain.value_objects import UniqueEntityId, ValueObject
 
 

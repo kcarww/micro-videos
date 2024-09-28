@@ -1,2 +1,9 @@
 # Ignore all .pyc files
-
+*.pyc
+__pycache__/
+*.log
+venv/
+.venv/
+.coverage
+__coverage/
+.cpython-310.pyc
