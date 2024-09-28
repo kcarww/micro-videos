@@ -3,6 +3,7 @@ from category.domain.entities import Category
 from category.domain.repositories import CategoryRepository
 from __seedwork.domain.repositories import InMemorySearchableRepository
 
+
 class CategoryInMemoryRepository(CategoryRepository, InMemorySearchableRepository):
     sortable_fields: List[str] = ["name", "created_at"]
 
@@ -16,10 +17,9 @@ class CategoryInMemoryRepository(CategoryRepository, InMemorySearchableRepositor
 
         return items
 
-    def _apply_sort(self, items: List[Category], sort: str = None, sort_dir: str = None ) -> List[Category]: 
+    def _apply_sort(self, items: List[Category], sort: str = None, sort_dir: str = None) -> List[Category]:
         print()
         if sort:
             return super()._apply_sort(items, sort, sort_dir)
-        
-        return super()._apply_sort(items, "created_at", "desc")
 
+        return super()._apply_sort(items, "created_at", "desc")

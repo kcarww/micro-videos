@@ -43,13 +43,15 @@ class TestCreateCategoryUseCaseUnit(unittest.TestCase):
                          Category.get_field('is_active').default)
 
     def test_execute(self):
-        with patch.object(self.category_repo,
-                          'insert',
-                          wraps=self.category_repo.insert) as spy_insert:
+        with patch.object(
+            self.category_repo,
+            'insert',
+            wraps=self.category_repo.insert
+        ) as spy_insert:
             input_param = CreateCategoryUseCase.Input(name='Movie')
             output = self.use_case.execute(input_param)
             spy_insert.assert_called_once()
-            self.assertEqual(output, CategoryOutput(
+            self.assertEqual(output, CreateCategoryUseCase.Output(
                 id=self.category_repo.items[0].id,
                 name='Movie',
                 description=None,
@@ -57,26 +59,25 @@ class TestCreateCategoryUseCaseUnit(unittest.TestCase):
                 created_at=self.category_repo.items[0].created_at
             ))
 
-        input_param = CreateCategoryUseCase.Input(name='teste',
-                                                  description='some')
+        input_param = CreateCategoryUseCase.Input(
+            name='Movie', description='some description', is_active=False)
         output = self.use_case.execute(input_param)
-        self.assertEqual(output, CategoryOutput(
+        self.assertEqual(output, CreateCategoryUseCase.Output(
             id=self.category_repo.items[1].id,
-            name='teste',
-            description='some',
-            is_active=True,
+            name='Movie',
+            description='some description',
+            is_active=False,
             created_at=self.category_repo.items[1].created_at
         ))
 
-        input_param = CreateCategoryUseCase.Input(name='teste',
-                                                  description='some',
-                                                  is_active=False)
+        input_param = CreateCategoryUseCase.Input(
+            name='Movie', description='some description', is_active=True)
         output = self.use_case.execute(input_param)
-        self.assertEqual(output, CategoryOutput(
+        self.assertEqual(output, CreateCategoryUseCase.Output(
             id=self.category_repo.items[2].id,
-            name='teste',
-            description='some',
-            is_active=False,
+            name='Movie',
+            description='some description',
+            is_active=True,
             created_at=self.category_repo.items[2].created_at
         ))
 
@@ -102,8 +103,8 @@ class TestGetCategoryUseCaseUnit(unittest.TestCase):
         input_param = GetCategoryUseCase.Input('fake id')
         with self.assertRaises(NotFoundException) as assert_error:
             self.use_case.execute(input_param)
-        self.assertEqual(assert_error.exception.args[0], \
-            f"Entity not found using ID '{input_param.id}'")
+        self.assertEqual(assert_error.exception.args[0],
+                         f"Entity not found using ID '{input_param.id}'")
 
     def test_execute(self):
         category = Category(name='Movie')
@@ -114,7 +115,7 @@ class TestGetCategoryUseCaseUnit(unittest.TestCase):
             input_param = GetCategoryUseCase.Input(id=category.id)
             output = self.use_case.execute(input_param)
             spy_find_by_id.assert_called_once()
-            self.assertEqual(output, CategoryOutput(
+            self.assertEqual(output, GetCategoryUseCase.Output(
                 id=self.category_repo.items[0].id,
                 name='Movie',
                 description=None,
@@ -134,7 +135,7 @@ class TestListCategoriesUseCaseUnit(unittest.TestCase):
 
     def test_instance_use_case(self):
         self.assertIsInstance(self.use_case, UseCase)
-        
+
     def test_input(self):
         self.assertTrue(issubclass(
             ListCategoriesUseCase.Input, SearchInput))
@@ -142,7 +143,7 @@ class TestListCategoriesUseCaseUnit(unittest.TestCase):
     def test_output(self):
         self.assertTrue(issubclass(
             ListCategoriesUseCase.Output, PaginationOutput))
-        
+
     def test__to_output(self):
         entity = Category(name='Movie')
         default_props = {
@@ -185,7 +186,7 @@ class TestListCategoriesUseCaseUnit(unittest.TestCase):
             self.assertEqual(output, ListCategoriesUseCase.Output(
                 items=list(
                     map(
-                        CategoryOutputMapper.to_output,
+                        CategoryOutputMapper.without_child().to_output,
                         self.category_repo.items[::-1]
                     )
                 ),
@@ -216,7 +217,8 @@ class TestListCategoriesUseCaseUnit(unittest.TestCase):
         self.assertEqual(output, ListCategoriesUseCase.Output(
             items=list(
                 map(
-                    CategoryOutputMapper.to_output, [items[1], items[2]]
+                    CategoryOutputMapper.without_child().to_output, [
+                        items[1], items[2]]
                 )
             ),
             total=3,
@@ -224,7 +226,7 @@ class TestListCategoriesUseCaseUnit(unittest.TestCase):
             per_page=2,
             last_page=2
         ))
-        
+
         input_param = ListCategoriesUseCase.Input(
             page=2,
             per_page=2,
@@ -236,7 +238,7 @@ class TestListCategoriesUseCaseUnit(unittest.TestCase):
         self.assertEqual(output, ListCategoriesUseCase.Output(
             items=list(
                 map(
-                    CategoryOutputMapper.to_output, [items[0]]
+                    CategoryOutputMapper.without_child().to_output, [items[0]]
                 )
             ),
             total=3,
@@ -244,7 +246,7 @@ class TestListCategoriesUseCaseUnit(unittest.TestCase):
             per_page=2,
             last_page=2
         ))
-        
+
         input_param = ListCategoriesUseCase.Input(
             page=1,
             per_page=2,
@@ -256,7 +258,8 @@ class TestListCategoriesUseCaseUnit(unittest.TestCase):
         self.assertEqual(output, ListCategoriesUseCase.Output(
             items=list(
                 map(
-                    CategoryOutputMapper.to_output, [items[0], items[2]]
+                    CategoryOutputMapper.without_child().to_output, [
+                        items[0], items[2]]
                 )
             ),
             total=3,
@@ -276,7 +279,7 @@ class TestListCategoriesUseCaseUnit(unittest.TestCase):
         self.assertEqual(output, ListCategoriesUseCase.Output(
             items=list(
                 map(
-                    CategoryOutputMapper.to_output, [items[1]]
+                    CategoryOutputMapper.without_child().to_output, [items[1]]
                 )
             ),
             total=3,

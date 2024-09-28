@@ -36,7 +36,6 @@ class TestCategoryUnit(unittest.TestCase):
             self.assertNotEqual(category1.created_at.timestamp(),
                                 category2.created_at.timestamp())
 
-
     def test_is_immutable(self):
         with patch.object(Category, 'validate'):
             with self.assertRaises(FrozenInstanceError):

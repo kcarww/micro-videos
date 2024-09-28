@@ -32,8 +32,10 @@ class TestCategoryInMemoryRepositoryUnit(unittest.TestCase):
     def test_sort_by_created_at_when_sort_param_is_null(self):
         items = [
             Category(name='test', created_at=datetime.now()),
-            Category(name='TEST', created_at=datetime.now() + timedelta(seconds=100)),
-            Category(name='fake', created_at=datetime.now() + timedelta(seconds=200)),
+            Category(name='TEST', created_at=datetime.now() +
+                     timedelta(seconds=100)),
+            Category(name='fake', created_at=datetime.now() +
+                     timedelta(seconds=200)),
         ]
         # pylint: disable=protected-access
         items_filtered = self.repo._apply_sort(items, None, None)

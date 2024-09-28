@@ -14,6 +14,7 @@ class _SearchParams(DefaultSearchParams):  # pylint: disable=too-few-public-meth
 class _SearchResult(DefaultSearchResult):  # pylint: disable=too-few-public-methods
     pass
 
+
 class CategoryRepository(SearchableRepositoryInterface[Category, _SearchParams, _SearchResult], ABC):
     SearchParams = _SearchParams
     SearchResult = _SearchResult

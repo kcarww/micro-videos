@@ -126,6 +126,7 @@ class TestSearchableRepositoryInterfaceUnit(unittest.TestCase):
     def test_if_sortable_field_is_empty(self):
         self.assertEqual(SearchableRepositoryInterface.sortable_fields, [])
 
+
 class TestSearchParamsUnit(unittest.TestCase):
     def test_props_annotations(self):
         self.assertEqual(SearchParams.__annotations__,
@@ -252,59 +253,59 @@ class TestSearchResultUnit(unittest.TestCase):
             'sort_dir': None,
             'filter': None
         })
-    
-    
+
     def test_when_per_page_is_greater_than_total(self):
         result = SearchResult(items=[],
                               total=4,
                               per_page=15,
                               current_page=1)
         self.assertEqual(result.last_page, 1)
-        
+
     def test_when_per_page_is_less_than_total_and_they_are_not_multiples(self):
         result = SearchResult(items=[],
                               total=101,
                               per_page=20,
                               current_page=1)
         self.assertEqual(result.last_page, 6)
-        
+
 
 class StubInMemorySearchableRepository(InMemorySearchableRepository[StubEntity, str]):
     sortable_fields: List = ['name']
-    
+
     def _apply_filter(self, items: List[StubEntity], filter_param: str | None) -> List[StubEntity]:
         if filter_param:
-            filter_obj = filter(lambda i: filter_param.lower() in i.name.lower() or filter_param == str(i.price), items)
+            filter_obj = filter(lambda i: filter_param.lower(
+            ) in i.name.lower() or filter_param == str(i.price), items)
             return list(filter_obj)
         return items
-    
-    
+
+
 class TestInMemorySearchableRepositoryUnit(unittest.TestCase):
     repo: StubInMemorySearchableRepository
-    
+
     def setUp(self):
         self.repo = StubInMemorySearchableRepository()
-        
+
     def test__apply_filter(self):
         items = [StubEntity(name='test', price=10.0)]
         # pylint: disable=protected-access
         result = self.repo._apply_filter(items, None)
         self.assertEqual(result, items)
-        
+
         items = [
             StubEntity(name='test', price=5),
             StubEntity(name='TEST', price=5),
             StubEntity(name='fake', price=0),
         ]
-        
+
         # pylint: disable=protected-access
         result = self.repo._apply_filter(items, 'TEST')
         self.assertEqual(result, [items[0], items[1]])
-        
+
         # pylint: disable=protected-access
         result = self.repo._apply_filter(items, '5')
         self.assertEqual([items[0], items[1]], result)
-        
+
     def test__apply_sort(self):
         items = [
             StubEntity(name='b', price=5),
@@ -312,25 +313,24 @@ class TestInMemorySearchableRepositoryUnit(unittest.TestCase):
         ]
         # pylint: disable=protected-access
         result = self.repo._apply_sort(items, 'name', 'asc')
-        self.assertEqual(result, [items[1], items[0]])	
-        
+        self.assertEqual(result, [items[1], items[0]])
+
         # pylint: disable=protected-access
         result = self.repo._apply_sort(items, 'price', 'asc')
-        self.assertEqual(result, items)	
-        
+        self.assertEqual(result, items)
+
         # pylint: disable=protected-access
         result = self.repo._apply_sort(items, 'name', 'desc')
-        self.assertEqual(result, items)	
-        
+        self.assertEqual(result, items)
+
         self.repo.sortable_fields.append('price')
         result = self.repo._apply_sort(items, 'price', 'desc')
-        self.assertEqual(result, items)	
-        
+        self.assertEqual(result, items)
+
         self.repo.sortable_fields.append('price')
         result = self.repo._apply_sort(items, 'price', 'asc')
         self.assertEqual(result, [items[1], items[0]])
-        
-        
+
     def test__apply_pagination(self):
         items = [
             StubEntity(name='a', price=1),
@@ -342,13 +342,13 @@ class TestInMemorySearchableRepositoryUnit(unittest.TestCase):
         # pylint: disable=protected-access
         result = self.repo._apply_pagination(items, 1, 2)
         self.assertEqual(result, [items[0], items[1]])
-        
+
         result = self.repo._apply_pagination(items, 2, 2)
         self.assertEqual(result, [items[2], items[3]])
-        
+
         result = self.repo._apply_pagination(items, 4, 2)
         self.assertEqual(result, [])
-        
+
     def test_search_when_params_is_empty(self):
         entity = StubEntity(name='a', price=1)
         items = [entity] * 16
@@ -363,7 +363,7 @@ class TestInMemorySearchableRepositoryUnit(unittest.TestCase):
             sort_dir=None,
             filter=None
         ))
-        
+
     def test_search_applying_filter_and_paginate(self):
         items = [
             StubEntity(name='test', price=1),
@@ -371,8 +371,8 @@ class TestInMemorySearchableRepositoryUnit(unittest.TestCase):
             StubEntity(name='TEST', price=1),
             StubEntity(name='TeSt', price=1),
         ]
-        self.repo.items = items 
-        
+        self.repo.items = items
+
         result = self.repo.search(SearchParams(filter='test', per_page=2))
         self.assertEqual(result, SearchResult(
             items=[items[0], items[2]],
@@ -383,7 +383,7 @@ class TestInMemorySearchableRepositoryUnit(unittest.TestCase):
             sort_dir=None,
             filter='test'
         ))
-        
+
         result = self.repo.search(SearchParams(
             page=2, per_page=2, filter='TEST'
         ))
@@ -396,8 +396,7 @@ class TestInMemorySearchableRepositoryUnit(unittest.TestCase):
             sort_dir=None,
             filter='TEST'
         ))
-        
-        
+
         result = self.repo.search(SearchParams(
             page=3, per_page=2, filter='TEST'
         ))
@@ -410,8 +409,7 @@ class TestInMemorySearchableRepositoryUnit(unittest.TestCase):
             sort_dir=None,
             filter='TEST'
         ))
-        
-        
+
     def test_search_applying_sort_and_pagination(self):
         items = [
             StubEntity(name='b', price=1),
@@ -421,7 +419,7 @@ class TestInMemorySearchableRepositoryUnit(unittest.TestCase):
             StubEntity(name='c', price=1),
         ]
         self.repo.items = items
-        
+
         arrange_by_asc = [
             {
                 'input': SearchParams(
@@ -466,7 +464,7 @@ class TestInMemorySearchableRepositoryUnit(unittest.TestCase):
                 )
             }
         ]
-        
+
         for index, item in enumerate(arrange_by_asc):
             result = self.repo.search(item['input'])
             self.assertEqual(
@@ -527,8 +525,7 @@ class TestInMemorySearchableRepositoryUnit(unittest.TestCase):
                 item['output'],
                 f"The output using sort_dir desc on index {index} is different"
             )
-            
-            
+
     def test_search_applying_filter_and_sort_and_paginate(self):
         items = [
             StubEntity(name='test', price=1),
@@ -574,5 +571,3 @@ class TestInMemorySearchableRepositoryUnit(unittest.TestCase):
             sort_dir="asc",
             filter="TEST"
         ))
-        
-        

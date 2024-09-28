@@ -104,9 +104,9 @@ class TestStrictBooleanFieldIntegration(unittest.TestCase):
 
         serializer = StubStrictBooleanFieldSerializer(data={'active': True})
         self.assertTrue(serializer.is_valid())
-        
+
         serializer = StubStrictBooleanFieldSerializer(data={'active': None})
         self.assertTrue(serializer.is_valid())
-        
+
         serializer = StubStrictBooleanFieldSerializer(data={'active': False})
         self.assertTrue(serializer.is_valid())

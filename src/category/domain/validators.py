@@ -7,7 +7,8 @@ from __seedwork.domain.validators import DRFValidator, StrictBooleanField, Stric
 
 class CategoryRules(serializers.Serializer):
     name = StrictCharField(max_length=255)
-    description = StrictCharField(required=False, allow_null=True, allow_blank=True)
+    description = StrictCharField(
+        required=False, allow_null=True, allow_blank=True)
     is_active = StrictBooleanField(required=False)
     created_at = serializers.DateTimeField(required=False)
 

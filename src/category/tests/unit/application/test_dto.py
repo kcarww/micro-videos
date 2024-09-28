@@ -16,25 +16,47 @@ class TestCategoryOutputUnit(unittest.TestCase):
             'is_active': bool,
             'created_at': datetime
         })
-        
-        
+
+
+class CategoryOutputChild(CategoryOutput):  # pylint: disable=too-few-public-methods
+    pass
+
+
 class TestCategoryOutputMapperUnit(unittest.TestCase):
+
+    def test_to_output_from_child(self):
+        mapper = CategoryOutputMapper\
+            .from_child(CategoryOutputChild)
+        self.assertIsInstance(mapper, CategoryOutputMapper)
+        self.assertTrue(
+            issubclass(
+                mapper.output_child,
+                CategoryOutputChild
+            )
+        )
+
     def test_to_output(self):
         created_at = datetime.now()
-        category = Category(name='test',
-                            description='some',
-                            is_active=True,
-                            created_at=created_at)
-        output = CategoryOutputMapper.to_output(category)
+        entity = Category(name='test',
+                          description='some',
+                          is_active=True,
+                          created_at=created_at)
+        output = CategoryOutputMapper.without_child().to_output(
+            entity)  # pylint: disable=duplicate-code
         self.assertEqual(output, CategoryOutput(
-            id=category.id,
-            name=category.name,
-            description=category.description,
-            is_active=category.is_active,
-            created_at=category.created_at
+            id=entity.id,
+            name=entity.name,
+            description=entity.description,
+            is_active=entity.is_active,
+            created_at=entity.created_at
         ))
-        
-        
-        
 
-        
+    def test_to_output_without_child(self):
+        mapper = CategoryOutputMapper.without_child()
+        self.assertIsInstance(mapper, CategoryOutputMapper)
+        self.assertTrue(
+            issubclass(
+                mapper.output_child,
+                CategoryOutput
+            )
+        )

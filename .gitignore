@@ -4,4 +4,5 @@ __pycache__/
 *.log
 venv/
 .venv/
-
+.coverage
+__coverage/

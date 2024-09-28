@@ -182,7 +182,7 @@ class TestDRFValidatorUnit(unittest.TestCase):
         self.assertTrue(is_valid)
         self.assertEqual(validator.validated_data, {'field': 'value'})
         mock_is_valid.assert_called_once()
-        
+
     @patch.object(Serializer, 'is_valid', return_value=False)
     @patch.object(Serializer, 'errors',
                   return_value={'field': ['some error']}, new_callable=PropertyMock)
@@ -192,4 +192,3 @@ class TestDRFValidatorUnit(unittest.TestCase):
         self.assertFalse(is_valid)
         self.assertEqual(validator.errors, {'field': ['some error']})
         mock_is_valid.assert_called_once()
-
