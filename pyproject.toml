@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "Default template for PDM package"
 authors = [
     {name = "Carlos", email = "carlos.oe.cc@gmail.com"},
+    {name = "Carl", email = "carlos.oe.cc@gmail.com"},
 ]
 dependencies = [
     "autopep8>=2.3.1",

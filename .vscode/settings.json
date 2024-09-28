@@ -20,7 +20,8 @@
     "python.testing.unittestEnabled": true,
     "python.testing.autoTestDiscoverOnSaveEnabled": true,
     "terminal.integrated.env.windows": {
-        "PYTHONPATH": "${workspaceFolder}/src"
+        "PYTHONPATH": "${workspaceFolder}/src",
+        "PATH": "$PATH;C:\\Users\\kcarw\\AppData\\Roaming\\Python\\Python312\\Scripts"
     },
     "python.languageServer": "Pylance",
     "editor.quickSuggestions": {

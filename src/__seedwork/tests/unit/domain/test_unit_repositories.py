@@ -19,7 +19,7 @@ class TestRepositoryInterfaceUnit(unittest.TestCase):
         with self.assertRaises(TypeError) as assert_error:
             RepositoryInterface()
         self.assertEqual(
-            assert_error.exception.args[0], "Can't instantiate abstract class RepositoryInterface without an implementation for abstract methods 'delete', 'find_all', 'find_by_id', 'insert', 'update'")
+            assert_error.exception.args[0], "Can't instantiate abstract class RepositoryInterface with abstract methods delete, find_all, find_by_id, insert, update")
 
 
 @dataclass(slots=True, kw_only=True, frozen=True)
@@ -121,7 +121,7 @@ class TestSearchableRepositoryInterfaceUnit(unittest.TestCase):
         with self.assertRaises(TypeError) as assert_error:
             SearchableRepositoryInterface()
         self.assertEqual(
-            assert_error.exception.args[0], "Can't instantiate abstract class SearchableRepositoryInterface without an implementation for abstract methods 'delete', 'find_all', 'find_by_id', 'insert', 'search', 'update'")
+            assert_error.exception.args[0], "Can't instantiate abstract class SearchableRepositoryInterface with abstract methods delete, find_all, find_by_id, insert, search, update")
 
     def test_if_sortable_field_is_empty(self):
         self.assertEqual(SearchableRepositoryInterface.sortable_fields, [])

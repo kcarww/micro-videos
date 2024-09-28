@@ -9,4 +9,4 @@ class TestUseCaseUnit(unittest.TestCase):
         with self.assertRaises(TypeError) as assert_error:
             UseCase()
         self.assertEqual(
-            assert_error.exception.args[0], "Can't instantiate abstract class UseCase without an implementation for abstract method 'execute'")
+            assert_error.exception.args[0], "Can't instantiate abstract class UseCase with abstract method execute")
