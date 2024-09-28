@@ -3,11 +3,13 @@ from datetime import timedelta
 from typing import Optional
 from unittest.mock import patch
 from django.utils import timezone
+from __seedwork.application.dto import PaginationOutput, SearchInput
 from __seedwork.application.use_cases import UseCase
 from __seedwork.domain.exceptions import NotFoundException
 from category.application.dto import CategoryOutput, CategoryOutputMapper
 from category.application.use_cases import CreateCategoryUseCase, GetCategoryUseCase, ListCategoriesUseCase
 from category.domain.entities import Category
+from category.domain.repositories import CategoryRepository
 from category.infra.repositories import CategoryInMemoryRepository
 
 
@@ -100,8 +102,8 @@ class TestGetCategoryUseCaseUnit(unittest.TestCase):
         input_param = GetCategoryUseCase.Input('fake id')
         with self.assertRaises(NotFoundException) as assert_error:
             self.use_case.execute(input_param)
-        self.assertEqual(assert_error.exception.args[0], f"Entity not found using ID '{
-                         input_param.id}'")
+        self.assertEqual(assert_error.exception.args[0], \
+            f"Entity not found using ID '{input_param.id}'")
 
     def test_execute(self):
         category = Category(name='Movie')
@@ -132,6 +134,43 @@ class TestListCategoriesUseCaseUnit(unittest.TestCase):
 
     def test_instance_use_case(self):
         self.assertIsInstance(self.use_case, UseCase)
+        
+    def test_input(self):
+        self.assertTrue(issubclass(
+            ListCategoriesUseCase.Input, SearchInput))
+
+    def test_output(self):
+        self.assertTrue(issubclass(
+            ListCategoriesUseCase.Output, PaginationOutput))
+        
+    def test__to_output(self):
+        entity = Category(name='Movie')
+        default_props = {
+            'total': 1,
+            'current_page': 1,
+            'per_page': 2,
+            'sort': None,
+            'sort_dir': None,
+            'filter': None
+        }
+
+        result = CategoryRepository.SearchResult(items=[], **default_props)
+        output = self.use_case._ListCategoriesUseCase__to_output(  # pylint: disable=protected-access
+            result
+        )
+        self.assertEqual(output, ListCategoriesUseCase.Output(
+            items=[],
+            total=1,
+            current_page=1,
+            per_page=2,
+            last_page=1,
+        ))
+
+        result = CategoryRepository.SearchResult(
+            items=[entity], **default_props)
+        output = self.use_case._ListCategoriesUseCase__to_output(  # pylint: disable=protected-access
+            result
+        )
 
     def test_execute_using_empty_search_params(self):
         self.category_repo.items = [
