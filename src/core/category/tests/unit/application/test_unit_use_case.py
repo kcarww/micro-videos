@@ -10,7 +10,7 @@ from core.category.application.dto import CategoryOutput, CategoryOutputMapper
 from core.category.application.use_cases import CreateCategoryUseCase, DeleteCategoryUseCase, GetCategoryUseCase, ListCategoriesUseCase, UpdateCategoryUseCase
 from core.category.domain.entities import Category
 from core.category.domain.repositories import CategoryRepository
-from core.category.infra.repositories import CategoryInMemoryRepository
+from core.category.infra.in_memory.repositories import CategoryInMemoryRepository
 
 
 class TestCreateCategoryUseCaseUnit(unittest.TestCase):

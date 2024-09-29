@@ -7,3 +7,5 @@ venv/
 .coverage
 __coverage/
 .cpython-310.pyc
+db.sqlite3
+.env
