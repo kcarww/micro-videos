@@ -5,6 +5,7 @@ from core.category.application.use_cases import (CreateCategoryUseCase,
                                                  ListCategoriesUseCase)
 from dataclasses import asdict, dataclass
 from rest_framework.views import APIView
+from rest_framework import status
 
 
 @dataclass(slots=True)
@@ -12,12 +13,12 @@ class CategoryResource(APIView):
     create_use_case: Callable[[], CreateCategoryUseCase]
     list_use_case: Callable[[], ListCategoriesUseCase]
     def post(self, request: Request):
-        input_param = CreateCategoryUseCase.Input(request.data['name'])
+        input_param = CreateCategoryUseCase.Input(**request.data)
         output = self.create_use_case().execute(input_param)
-        return Response(asdict(output))
+        return Response(asdict(output), status=status.HTTP_201_CREATED)
     
     def get(self, request: Request):
-        input_param = ListCategoriesUseCase.Input(**request.query_params.dict())
+        input_param = ListCategoriesUseCase.Input(**request.query_params.dict())        
         outpu_param = self.list_use_case().execute(input_param)
         return Response(asdict(outpu_param))
 
