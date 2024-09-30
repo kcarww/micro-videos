@@ -1,4 +1,4 @@
-GET http://localhost:8000/categories
+GET http://localhost:8000/categories?name=movie
 
 ###
 
@@ -6,5 +6,5 @@ POST http://localhost:8000/categories
 Content-Type: application/json
 
 {
-  "name": "Category 2"
+  "name": "movie"
 }

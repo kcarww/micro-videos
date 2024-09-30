@@ -5,7 +5,7 @@
 groups = ["default"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:343eeb4ef89fe9f7df5e556aaa6a0069a8b12f44e4ebe2d79e3b5faa050ec5f8"
+content_hash = "sha256:a4d5faee39c0d1433834d6f193cad99e8557c4190887431fa339e848678c436c"
 
 [[metadata.targets]]
 requires_python = "==3.10.*"
@@ -22,6 +22,32 @@ dependencies = [
 files = [
     {file = "asgiref-3.8.1-py3-none-any.whl", hash = "sha256:3e1e3ecc849832fe52ccf2cb6686b7a55f82bb1d6aee72a58826471390335e47"},
     {file = "asgiref-3.8.1.tar.gz", hash = "sha256:c343bd80a0bec947a9860adb4c432ffa7db769836c64238fc34bdc3fec84d590"},
+]
+
+[[package]]
+name = "dependency-injector"
+version = "4.42.0"
+summary = "Dependency injection framework for Python"
+groups = ["default"]
+dependencies = [
+    "six<=1.16.0,>=1.7.0",
+]
+files = [
+    {file = "dependency_injector-4.42.0-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:0bb90f064970366acddc6e946626dd9b59505dc0f798459fe31fce458a8d0fc5"},
+    {file = "dependency_injector-4.42.0-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:cf96588c58790768c9ebb2f61532dc847236bdf7317b07cfdf75a14d63c3114e"},
+    {file = "dependency_injector-4.42.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:54b3ef487584bf2f9945b3f2f97e0ada8933e773960e0a3c4b40d369e37003fb"},
+    {file = "dependency_injector-4.42.0-cp310-cp310-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:a0625b993dc3c58c35b613d9ccdf0eb8420f978f62d19d71820ea7630326972d"},
+    {file = "dependency_injector-4.42.0-cp310-cp310-musllinux_1_2_aarch64.whl", hash = "sha256:4a4eb3356e26273f8065266fab4fd51c863afafe10e586d3bfc67340677e2674"},
+    {file = "dependency_injector-4.42.0-cp310-cp310-musllinux_1_2_i686.whl", hash = "sha256:dffba9e2864b5d002f5b3bd89df4cde4f20dec4c2cd073ce0bd460229ed0afdb"},
+    {file = "dependency_injector-4.42.0-cp310-cp310-musllinux_1_2_x86_64.whl", hash = "sha256:19b50b48030dfa7cd3488253cbe7ee69c9b737275ac1aa184d9e995f44bb8317"},
+    {file = "dependency_injector-4.42.0-cp310-cp310-win32.whl", hash = "sha256:68af4878040573a710202e171ecc1cec2c47910783f59d14c299f68439f8fe0b"},
+    {file = "dependency_injector-4.42.0-cp310-cp310-win_amd64.whl", hash = "sha256:8eb65b102b36d171dfdf6c9b06766797d97d535b83a61859d1d91092b960c05a"},
+    {file = "dependency_injector-4.42.0-pp310-pypy310_pp73-macosx_11_0_arm64.whl", hash = "sha256:e040496d6d22ed0bab2ab96a13734a22bd4f60b74b73a4a682688fc0e615841c"},
+    {file = "dependency_injector-4.42.0-pp310-pypy310_pp73-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:2507d1de74314340479b57e31c103e0fcfa5135de03b07a774794cfb244f6098"},
+    {file = "dependency_injector-4.42.0-pp310-pypy310_pp73-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:67f52a45a00fd93e33b3d5c45181298ae2f09c56640e41524eec517ceccaf2fc"},
+    {file = "dependency_injector-4.42.0-pp310-pypy310_pp73-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:1b20c4d1be03eac0ab8e7ec91604f58a9fae705f6a4e228802c6302464cc1701"},
+    {file = "dependency_injector-4.42.0-pp310-pypy310_pp73-win_amd64.whl", hash = "sha256:0d11dcd7461747ae968e5e459eb5389652e6f49ab00eecfe05b19249f6d5aebd"},
+    {file = "dependency_injector-4.42.0.tar.gz", hash = "sha256:7057fc07b89aa09bc1c75e4190a8a6b86a3038d91a6d8302aea4f8094b184cd0"},
 ]
 
 [[package]]
@@ -67,6 +93,17 @@ dependencies = [
 files = [
     {file = "djangorestframework-3.15.2-py3-none-any.whl", hash = "sha256:2b8871b062ba1aefc2de01f773875441a961fefbf79f5eed1e32b2f096944b20"},
     {file = "djangorestframework-3.15.2.tar.gz", hash = "sha256:36fe88cd2d6c6bec23dca9804bab2ba5517a8bb9d8f47ebc68981b56840107ad"},
+]
+
+[[package]]
+name = "six"
+version = "1.16.0"
+requires_python = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
+summary = "Python 2 and 3 compatibility utilities"
+groups = ["default"]
+files = [
+    {file = "six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},
+    {file = "six-1.16.0.tar.gz", hash = "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926"},
 ]
 
 [[package]]

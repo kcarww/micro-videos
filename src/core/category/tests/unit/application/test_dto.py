@@ -1,8 +1,6 @@
 from datetime import datetime
 from typing import Optional
 import unittest
-
-import category
 from core.category.application.dto import CategoryOutput, CategoryOutputMapper
 from core.category.domain.entities import Category
 
