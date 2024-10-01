@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.request import Request
 from core.category.application.use_cases import (CreateCategoryUseCase,
                                                  ListCategoriesUseCase)
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, is_dataclass
 from rest_framework.views import APIView
 from rest_framework import status
 

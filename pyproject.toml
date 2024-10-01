@@ -10,6 +10,7 @@ dependencies = [
     "django>=5.1.1",
     "django-extensions>=3.2.3",
     "dependency-injector>=4.42.0",
+    "pytest-django>=4.9.0",
 ]
 requires-python = "==3.10.*"
 readme = "README.md"

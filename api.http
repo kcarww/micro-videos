@@ -1,4 +1,4 @@
-GET http://localhost:8000/categories?name=movie
+GET http://localhost:8000/categories?page=1
 
 ###
 
