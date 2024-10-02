@@ -26,3 +26,7 @@ Content-Type: application/json
   "name": "movie 2",
   "description": "movie 2 description"
 }
+
+###
+
+DELETE http://localhost:8000/categories/9966ceff-aa8a-467d-83c0-075dbad05907

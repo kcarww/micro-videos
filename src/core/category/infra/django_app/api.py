@@ -1,8 +1,13 @@
 from typing import Callable
 from rest_framework.response import Response
 from rest_framework.request import Request
-from core.category.application.use_cases import (CreateCategoryUseCase, GetCategoryUseCase,
-                                                 ListCategoriesUseCase, UpdateCategoryUseCase)
+from core.category.application.use_cases import (
+    CreateCategoryUseCase,
+    DeleteCategoryUseCase,
+    GetCategoryUseCase,
+    ListCategoriesUseCase,
+    UpdateCategoryUseCase
+)
 from dataclasses import asdict, dataclass
 from rest_framework.views import APIView
 from rest_framework import status
@@ -14,6 +19,7 @@ class CategoryResource(APIView):
     list_use_case: Callable[[], ListCategoriesUseCase]
     get_use_case: Callable[[], GetCategoryUseCase]
     update_use_case: Callable[[], UpdateCategoryUseCase]
+    delete_use_case: Callable[[], DeleteCategoryUseCase]
 
     def post(self, request: Request):
         input_param = CreateCategoryUseCase.Input(**request.data)
@@ -34,9 +40,15 @@ class CategoryResource(APIView):
         return Response(asdict(output_param))
 
     def put(self, request: Request, id: str):
-        input_param = UpdateCategoryUseCase.Input(**{'id': id,  **request.data})
+        input_param = UpdateCategoryUseCase.Input(
+            **{'id': id,  **request.data})
         output_param = self.update_use_case().execute(input_param)
         return Response(asdict(output_param))
+
+    def delete(self, id: str):
+        input_param = DeleteCategoryUseCase.Input(id)
+        output_param = self.delete_use_case().execute(input_param)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 # @api_view(['POST'])
