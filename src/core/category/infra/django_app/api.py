@@ -45,9 +45,9 @@ class CategoryResource(APIView):
         output_param = self.update_use_case().execute(input_param)
         return Response(asdict(output_param))
 
-    def delete(self, id: str):
-        input_param = DeleteCategoryUseCase.Input(id)
-        output_param = self.delete_use_case().execute(input_param)
+    def delete(self, _request: Request, id: str):
+        input_param = DeleteCategoryUseCase.Input(id=id)
+        self.delete_use_case().execute(input_param)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 

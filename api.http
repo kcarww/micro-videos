@@ -29,4 +29,4 @@ Content-Type: application/json
 
 ###
 
-DELETE http://localhost:8000/categories/9966ceff-aa8a-467d-83c0-075dbad05907
+DELETE http://localhost:8000/categories/f47b0044-c4a6-4612-b8a8-eb3633302569

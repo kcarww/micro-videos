@@ -1,5 +1,6 @@
 [MASTER]
 ignore=__pypackages__/**/*.py
+extension-pkg-allow-list=dependency_injector
 
 
 [MESSAGES CONTROL]
