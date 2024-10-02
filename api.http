@@ -3,7 +3,7 @@ GET http://localhost:8000/categories?page=1
 ###
 
 
-GET http://localhost:8000/categories/725850c8-9c04-4cce-87c2-b7be6327cdcc
+GET http://localhost:8000/categories
 
 ###
 
@@ -13,4 +13,16 @@ Content-Type: application/json
 
 {
   "name": "movie"
+}
+
+
+###
+
+
+PUT http://localhost:8000/categories/db1ff133-6e3e-439b-add7-fa5b9eeb1a28
+Content-Type: application/json
+
+{
+  "name": "movie 2",
+  "description": "movie 2 description"
 }
