@@ -7,6 +7,7 @@ from core.category.application.use_cases import (
     GetCategoryUseCase,
     ListCategoriesUseCase,
     UpdateCategoryUseCase,
+    DeleteCategoryUseCase
 )
 from core.category.infra.django_app.api import CategoryResource
 from rest_framework.test import APIRequestFactory
@@ -176,6 +177,27 @@ class TestCategoryResourceUnit(unittest.TestCase):
                                          'description': None,
                                          'is_active': True,
                                          'created_at': mock_put_use_case.execute.return_value.created_at})
+
+
+    def test_delete_object__method(self):
+        mock_delete_use_case = mock.Mock(DeleteCategoryUseCase)
+
+        resource = CategoryResource(
+            **{
+                **self.__init_all_none(),
+                'delete_use_case': lambda: mock_delete_use_case
+            }
+        )
+        _request = APIRequestFactory().delete('/')
+        request = Request(_request)
+        response = resource.delete(
+            request, 'c31d3c48-9a2d-42d0-9c5f-400249e5556b')
+        mock_delete_use_case.execute.assert_called_with(DeleteCategoryUseCase.Input(
+            id='c31d3c48-9a2d-42d0-9c5f-400249e5556b'
+        ))
+        self.assertEqual(response.status_code, 204)
+
+
 
     def __init_all_none(self):
         return {
