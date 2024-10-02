@@ -2,6 +2,12 @@ GET http://localhost:8000/categories?page=1
 
 ###
 
+
+GET http://localhost:8000/categories/725850c8-9c04-4cce-87c2-b7be6327cdcc
+
+###
+
+
 POST http://localhost:8000/categories
 Content-Type: application/json
 
