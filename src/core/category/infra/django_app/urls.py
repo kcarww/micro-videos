@@ -2,8 +2,8 @@ from django.urls import path
 
 from core.category.application.use_cases import CreateCategoryUseCase
 from core.category.infra.in_memory.repositories import CategoryInMemoryRepository
-from .api import CategoryResource
-from django_app import container
+from .api import CategoryResource 
+from django_app import container #pylint: disable=E0611
 
 
 class CategoryInMemoryFactory:
