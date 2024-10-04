@@ -31,7 +31,8 @@ class CategoryDjangoRepository(CategoryRepository):
         model.save()
         
     def delete(self, entity_id: str | UniqueEntityId) -> None:
-        raise NotImplementedError()
+        model = self._get(str(entity_id))
+        model.delete()
 
     def _get(self, entity_id: str) -> CategoryModel:
         try:

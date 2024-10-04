@@ -83,6 +83,13 @@ class TestCategoryDjangoRepositoryInt(unittest.TestCase):
         category.update(name='Movie changed',
                         description='description changed')
         self.repo.update(category)
+        
+        model = CategoryModel.objects.get(pk=category.id)
+        self.assertEqual(str(model.id), category.id)
+        self.assertEqual(model.name, 'Movie changed')
+        self.assertEqual(model.description, 'description changed')
+        self.assertTrue(model.is_active)
+        self.assertEqual(model.created_at, category.created_at)
     
 
     def test_delete(self):
