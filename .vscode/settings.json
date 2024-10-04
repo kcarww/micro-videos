@@ -1,5 +1,5 @@
 {
-    "python.defaultInterpreterPath": "C:/Users/kcarw/AppData/Local/pdm/pdm/venvs/micro-videos-2jvG20KW-venv/Scripts",
+    "python.defaultInterpreterPath": "C:/Users/kcarw/AppData/Local/pdm/pdm/venvs/micro-videos-2jvG20KW-venv/Scripts/python.exe",
     "python.analysis.extraPaths": [
         "${workspaceFolder}/src",
         "${workspaceFolder}/__pypackages__/3.10/lib"
@@ -22,7 +22,7 @@
     "python.testing.autoTestDiscoverOnSaveEnabled": true,
     "terminal.integrated.env.windows": {
         "PYTHONPATH": "${workspaceFolder}/src",
-        "PATH": "$PATH;C:\\Users\\kcarw\\AppData\\Roaming\\Python\\Python312\\Scripts",
+        "PATH": "${env:PATH};C:\\Users\\kcarw\\AppData\\Roaming\\Python\\Python312\\Scripts",
         "DJANGO_SETTINGS_MODULE": "django_app.settings",
 
     },
