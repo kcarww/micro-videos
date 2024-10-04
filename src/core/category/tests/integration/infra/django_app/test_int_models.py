@@ -1,7 +1,6 @@
-from django.utils import timezone
-import unittest
-
 import pytest
+import unittest
+from django.utils import timezone
 from core.category.infra.django_app.models import CategoryModel
 
 

@@ -8,7 +8,7 @@ class CategoryModel(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(null=True)
     is_active = models.BooleanField(default=True)
-    created_at = models.DateField(default=timezone.now())
+    created_at = models.DateField(default=timezone.now)
     
     class Meta:
         db_table = 'categories'

@@ -4,6 +4,7 @@ import os
 import sys
 
 
+
 def main():
     """Run administrative tasks."""
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "django_app.settings")
@@ -19,4 +20,5 @@ def main():
 
 
 if __name__ == "__main__":
+
     main()
