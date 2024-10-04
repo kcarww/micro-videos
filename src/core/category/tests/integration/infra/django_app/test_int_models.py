@@ -1,11 +1,9 @@
 import pytest
 import unittest
-from django.utils import timezone
-from core.category.domain.entities import Category
 from core.category.infra.django_app.models import CategoryModel
 from django.db import models
 
-@pytest.mark.django_db()
+@pytest.mark.django_db
 class TestCategoryModelInt(unittest.TestCase):
 
     def test_mapping(self):
