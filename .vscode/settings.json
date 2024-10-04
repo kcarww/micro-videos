@@ -37,7 +37,7 @@
     "python.analysis.autoSearchPaths": true,
     "python.analysis.useLibraryCodeForTypes": true,
     "python.testing.pytestArgs": [
-        "src"
+        "."
     ],
 
 }
