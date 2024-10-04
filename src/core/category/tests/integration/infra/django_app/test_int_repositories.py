@@ -2,9 +2,13 @@ import unittest
 
 import pytest
 
+
+
+from model_bakery import baker
 from core.__seedwork.domain.exceptions import NotFoundException
 from core.__seedwork.domain.value_objects import UniqueEntityId
 from core.category.domain.entities import Category
+from core.category.infra.django_app.mappers import CategoryModelMapper
 from core.category.infra.django_app.models import CategoryModel
 from core.category.infra.django_app.repositories import CategoryDjangoRepository
 
@@ -52,12 +56,34 @@ class TestCategoryDjangoRepositoryInt(unittest.TestCase):
         entity_found = self.repo.find_by_id(category.id)
         
         self.assertEqual(category, entity_found)
-
+        
+    
     def test_find_all(self):
-        pass
+        models = baker.make(CategoryModel, _quantity=2)
+        categories = self.repo.find_all()
+        
+        self.assertEqual(len(categories), 2)
+        self.assertEqual(
+            categories[0], CategoryModelMapper.to_entity(models[0]))
+        self.assertEqual(
+            categories[1], CategoryModelMapper.to_entity(models[1]))
+        
+        
+    def test_throw_not_found_exception_in_update(self):
+        entity = Category(name='Movie')
+        with self.assertRaises(NotFoundException) as assert_error:
+            self.repo.update(entity)
+        self.assertEqual(
+            assert_error.exception.args[0], f"Entity not found using ID '{entity.id}'")
 
     def test_update(self):
-        pass
+        category = Category(name='Movie')
+        self.repo.insert(category)
+
+        category.update(name='Movie changed',
+                        description='description changed')
+        self.repo.update(category)
+    
 
     def test_delete(self):
         pass

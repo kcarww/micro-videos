@@ -2,7 +2,6 @@
 # pylint: disable=unexpected-keyword-arg,no-member
 import unittest
 import pytest
-from model_bakery import baker
 from django.utils import timezone
 from core.category.infra.django_app.models import CategoryModel
 from core.category.domain.entities import Category
@@ -45,12 +44,4 @@ class TestCategoryModelMapper(unittest.TestCase):
         self.assertTrue(model.is_active)
         self.assertEqual(model.created_at, entity.created_at)
         
-    def test_find_all(self):
-        models = baker.make(CategoryModel, _quantity=2)
-        categories = self.repo.find_all()
-        
-        self.assertEqual(len(categories), 2)
-        self.assertEqual(
-            categories[0], CategoryModelMapper.to_entity(models[0]))
-        self.assertEqual(
-            categories[1], CategoryModelMapper.to_entity(models[1]))
+   
