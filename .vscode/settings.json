@@ -22,7 +22,9 @@
     "python.testing.autoTestDiscoverOnSaveEnabled": true,
     "terminal.integrated.env.windows": {
         "PYTHONPATH": "${workspaceFolder}/src",
-        "PATH": "$PATH;C:\\Users\\kcarw\\AppData\\Roaming\\Python\\Python312\\Scripts"
+        "PATH": "$PATH;C:\\Users\\kcarw\\AppData\\Roaming\\Python\\Python312\\Scripts",
+        "DJANGO_SETTINGS_MODULE": "django_app.settings",
+
     },
     "python.languageServer": "Pylance",
     "editor.quickSuggestions": {
