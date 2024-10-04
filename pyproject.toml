@@ -25,6 +25,7 @@ dev = [
     "pytest-cov>=5.0.0",
     "pytest>=8.3.3",
     "pylint>=3.3.1",
+    "model-bakery>=1.19.5",
 ]
 
 [tool.pdm.scripts]
