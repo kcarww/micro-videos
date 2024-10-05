@@ -12,6 +12,8 @@ from dataclasses import asdict, dataclass
 from rest_framework.views import APIView
 from rest_framework import status
 
+from core.category.infra.serializers import CategorySerializer
+
 
 @dataclass(slots=True)
 class CategoryResource(APIView):
@@ -22,7 +24,11 @@ class CategoryResource(APIView):
     delete_use_case: Callable[[], DeleteCategoryUseCase]
 
     def post(self, request: Request):
-        input_param = CreateCategoryUseCase.Input(**request.data)
+        
+        serializer = CategorySerializer(instance=request.data)
+        serializer.is_valid(raise_exception=True)
+        
+        input_param = CreateCategoryUseCase.Input(**serializer.validated_data)
         output = self.create_use_case().execute(input_param)
         return Response(asdict(output), status=status.HTTP_201_CREATED)
 
@@ -40,8 +46,12 @@ class CategoryResource(APIView):
         return Response(asdict(output_param))
 
     def put(self, request: Request, id: str):
+        
+        serializer = CategorySerializer(instance=request.data)
+        serializer.is_valid(raise_exception=True)
+        
         input_param = UpdateCategoryUseCase.Input(
-            **{'id': id,  **request.data})
+            **{'id': id,  **serializer.validated_data})
         output_param = self.update_use_case().execute(input_param)
         return Response(asdict(output_param))
 
