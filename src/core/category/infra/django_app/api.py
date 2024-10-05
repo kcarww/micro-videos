@@ -12,7 +12,7 @@ from dataclasses import asdict, dataclass
 from rest_framework.views import APIView
 from rest_framework import status
 
-from core.category.infra.serializers import CategorySerializer
+from core.category.infra.django_app.serializers import CategorySerializer
 
 
 @dataclass(slots=True)
@@ -25,7 +25,7 @@ class CategoryResource(APIView):
 
     def post(self, request: Request):
         
-        serializer = CategorySerializer(instance=request.data)
+        serializer = CategorySerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         
         input_param = CreateCategoryUseCase.Input(**serializer.validated_data)
@@ -47,7 +47,7 @@ class CategoryResource(APIView):
 
     def put(self, request: Request, id: str):
         
-        serializer = CategorySerializer(instance=request.data)
+        serializer = CategorySerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         
         input_param = UpdateCategoryUseCase.Input(
