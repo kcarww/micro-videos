@@ -1,7 +1,10 @@
 import unittest
 import pytest
 
-from core.category.application.use_cases import CreateCategoryUseCase
+from model_bakery import baker
+from core.__seedwork.domain.exceptions import NotFoundException
+from core.category.application.use_cases import CreateCategoryUseCase, GetCategoryUseCase
+from core.category.infra.django_app.models import CategoryModel
 from core.category.infra.django_app.repositories import CategoryDjangoRepository
 
 
@@ -90,3 +93,33 @@ class TestCreateCategoryUseCaseInt(unittest.TestCase):
         self.assertEqual(entity.name, 'Movie4')
         self.assertEqual(entity.description, 'some description ##')
         self.assertFalse(entity.is_active)
+        
+        
+@pytest.mark.django_db
+class TestGetCategoryUseCaseInt(unittest.TestCase):
+
+    use_case: GetCategoryUseCase
+    repo: CategoryDjangoRepository
+
+    def setUp(self) -> None:
+        self.repo = CategoryDjangoRepository()
+        self.use_case = GetCategoryUseCase(self.repo)
+
+    def test_throws_exception_when_category_not_found(self):
+        input_param = GetCategoryUseCase.Input('fake id')
+        with self.assertRaises(NotFoundException) as assert_error:
+            self.use_case.execute(input_param)
+        self.assertEqual(
+            assert_error.exception.args[0], "Entity not found using ID 'fake id'")
+
+    def test_execute(self):
+        entity = baker.make(CategoryModel)
+        input_param = GetCategoryUseCase.Input(entity.id)
+        output = self.use_case.execute(input_param)
+        self.assertEqual(output, GetCategoryUseCase.Output(
+            id=str(entity.id),
+            name=entity.name,
+            description=entity.description,
+            is_active=entity.is_active,
+            created_at=entity.created_at
+        ))
