@@ -1,13 +1,15 @@
+from datetime import datetime
 import unittest
 
 import pytest
 
-
-
 from model_bakery import baker
+from model_bakery.recipe import seq
+from django.utils import timezone
 from core.__seedwork.domain.exceptions import NotFoundException
 from core.__seedwork.domain.value_objects import UniqueEntityId
 from core.category.domain.entities import Category
+from core.category.domain.repositories import CategoryRepository
 from core.category.infra.django_app.mappers import CategoryModelMapper
 from core.category.infra.django_app.models import CategoryModel
 from core.category.infra.django_app.repositories import CategoryDjangoRepository
@@ -135,5 +137,278 @@ class TestCategoryDjangoRepositoryInt(unittest.TestCase):
         with self.assertRaises(NotFoundException):
             self.repo.find_by_id(category.id)
 
-    def test_search(self):
-        pass
+    def test_search_when_params_is_empty(self):
+        models = baker.make(
+            CategoryModel,
+            _quantity=16,
+            created_at=seq(datetime.now(), datetime.timedelta(days=1))
+        )
+        models.reverse()
+
+        search_result = self.repo.search(CategoryRepository.SearchParams())
+        self.assertIsInstance(search_result, CategoryRepository.SearchResult)
+        self.assertEqual(search_result, CategoryRepository.SearchResult(
+            items=[
+                CategoryModelMapper.to_entity(
+                    model) for model in models[:15]
+            ],
+            total=16,
+            current_page=1,
+            per_page=15,
+            sort=None,
+            sort_dir=None,
+            filter=None
+        ))
+        
+    def test_search_applying_filter_and_paginate(self):
+        default_props = {
+            'description': None,
+            'is_active': True,
+            'created_at': timezone.now()
+        }
+        models = CategoryModel.objects.bulk_create([
+            CategoryModel(
+                id=UniqueEntityId().id,
+                name='test',
+                **default_props
+            ),
+            CategoryModel(
+                id=UniqueEntityId().id,
+                name='a',
+                **default_props
+            ),
+            CategoryModel(
+                id=UniqueEntityId().id,
+                name='TEST',
+                **default_props
+            ),
+            CategoryModel(
+                id=UniqueEntityId().id,
+                name='TeSt',
+                **default_props
+            )
+        ])
+
+        search_params = CategoryRepository.SearchParams(
+            page=1,
+            per_page=2,
+            filter='E'
+        )
+        search_result = self.repo.search(search_params)
+        assert search_result == CategoryRepository.SearchResult(
+            items=[
+                CategoryModelMapper.to_entity(models[0]),
+                CategoryModelMapper.to_entity(models[2]),
+            ],
+            total=3,
+            current_page=1,
+            per_page=2,
+            sort=None,
+            sort_dir=None,
+            filter='E'
+        )
+        
+    def test_search_applying_paginate_and_sort(self):
+        default_props = {
+            'description': None,
+            'is_active': True,
+            'created_at': timezone.now()
+        }
+        models = CategoryModel.objects.bulk_create([
+            CategoryModel(
+                id=UniqueEntityId().id,
+                name='b',
+                **default_props
+            ),
+            CategoryModel(
+                id=UniqueEntityId().id,
+                name='a',
+                **default_props
+            ),
+            CategoryModel(
+                id=UniqueEntityId().id,
+                name='d',
+                **default_props
+            ),
+            CategoryModel(
+                id=UniqueEntityId().id,
+                name='e',
+                **default_props
+            ),
+            CategoryModel(
+                id=UniqueEntityId().id,
+                name='c',
+                **default_props
+            )
+        ])
+
+        arrange_by_asc = [
+            {
+                'search_params': CategoryDjangoRepository.SearchParams(
+                    per_page=2,
+                    sort='name'
+                ),
+                'search_output': CategoryDjangoRepository.SearchResult(
+                    items=[
+                        CategoryModelMapper.to_entity(models[1]),
+                        CategoryModelMapper.to_entity(models[0]),
+                    ],
+                    total=5,
+                    current_page=1,
+                    per_page=2,
+                    sort='name',
+                    sort_dir='asc',
+                    filter=None
+                ),
+            },
+            {
+                'search_params': CategoryDjangoRepository.SearchParams(
+                    page=2,
+                    per_page=2,
+                    sort='name'
+                ),
+                'search_output': CategoryDjangoRepository.SearchResult(
+                    items=[
+                        CategoryModelMapper.to_entity(models[4]),
+                        CategoryModelMapper.to_entity(models[2]),
+                    ],
+                    total=5,
+                    current_page=2,
+                    per_page=2,
+                    sort='name',
+                    sort_dir='asc',
+                    filter=None
+                ),
+            },
+        ]
+
+        for index, item in enumerate(arrange_by_asc):
+            search_output = self.repo.search(item['search_params'])
+            self.assertEqual(
+                search_output,
+                item['search_output'],
+                f"The output using sort_dir asc on index {index} is different"
+            )
+
+        arrange_by_desc = [
+            {
+                'search_params': CategoryDjangoRepository.SearchParams(
+                    per_page=2,
+                    sort='name',
+                    sort_dir='desc',
+                ),
+                'search_output': CategoryDjangoRepository.SearchResult(
+                    items=[
+                        CategoryModelMapper.to_entity(models[3]),
+                        CategoryModelMapper.to_entity(models[2]),
+                    ],
+                    total=5,
+                    current_page=1,
+                    per_page=2,
+                    sort='name',
+                    sort_dir='desc',
+                    filter=None
+                ),
+            },
+            {
+                'search_params': CategoryDjangoRepository.SearchParams(
+                    page=2,
+                    per_page=2,
+                    sort='name',
+                    sort_dir='desc',
+                ),
+                'search_output': CategoryDjangoRepository.SearchResult(
+                    items=[
+                        CategoryModelMapper.to_entity(models[4]),
+                        CategoryModelMapper.to_entity(models[0]),
+                    ],
+                    total=5,
+                    current_page=2,
+                    per_page=2,
+                    sort='name',
+                    sort_dir='desc',
+                    filter=None
+                ),
+            }
+        ]
+
+        for index, item in enumerate(arrange_by_desc):
+            search_output = self.repo.search(item['search_params'])
+            self.assertEqual(
+                search_output,
+                item['search_output'],
+                f"The output using sort_dir desc on index {index} is different"
+            )
+
+    def test_search_applying_filter_sort_and_paginate(self):
+        default_props = {
+            'description': None,
+            'is_active': True,
+            'created_at': timezone.now()
+        }
+        models = CategoryModel.objects.bulk_create([
+            CategoryModel(
+                id=UniqueEntityId().id,
+                name='test',
+                **default_props
+            ),
+            CategoryModel(
+                id=UniqueEntityId().id,
+                name='a',
+                **default_props
+            ),
+            CategoryModel(
+                id=UniqueEntityId().id,
+                name='TEST',
+                **default_props
+            ),
+            CategoryModel(
+                id=UniqueEntityId().id,
+                name='e',
+                **default_props
+            ),
+            CategoryModel(
+                id=UniqueEntityId().id,
+                name='TeSt',
+                **default_props
+            )
+        ])
+
+        search_result = self.repo.search(CategoryRepository.SearchParams(
+            page=1,
+            per_page=2,
+            sort='name',
+            sort_dir='asc',
+            filter='TEST'
+        ))
+        self.assertEqual(search_result, CategoryDjangoRepository.SearchResult(
+            items=[
+                CategoryModelMapper.to_entity(models[2]),
+                CategoryModelMapper.to_entity(models[4]),
+            ],
+            total=3,
+            current_page=1,
+            per_page=2,
+            sort='name',
+            sort_dir='asc',
+            filter='TEST'
+        ))
+
+        search_result = self.repo.search(CategoryRepository.SearchParams(
+            page=2,
+            per_page=2,
+            sort='name',
+            sort_dir='asc',
+            filter='TEST'
+        ))
+        self.assertEqual(search_result, CategoryDjangoRepository.SearchResult(
+            items=[
+                CategoryModelMapper.to_entity(models[0]),
+            ],
+            total=3,
+            current_page=2,
+            per_page=2,
+            sort='name',
+            sort_dir='asc',
+            filter='TEST'
+        ))

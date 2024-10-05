@@ -3,7 +3,7 @@ GET http://localhost:8000/categories?page=1
 ###
 
 
-GET http://localhost:8000/categories
+GET http://localhost:8000/categories/03ccd350-fffd-4194-ada4-8ff77e0e0399
 
 ###
 
@@ -19,7 +19,7 @@ Content-Type: application/json
 ###
 
 
-PUT http://localhost:8000/categories/db1ff133-6e3e-439b-add7-fa5b9eeb1a28
+PUT http://localhost:8000/categories/03ccd350-fffd-4194-ada4-8ff77e0e0399
 Content-Type: application/json
 
 {
@@ -29,4 +29,4 @@ Content-Type: application/json
 
 ###
 
-DELETE http://localhost:8000/categories/f47b0044-c4a6-4612-b8a8-eb3633302569
+DELETE http://localhost:8000/categories/03ccd350-fffd-4194-ada4-8ff77e0e0399
