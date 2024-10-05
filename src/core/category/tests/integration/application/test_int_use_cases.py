@@ -33,3 +33,60 @@ class TestCreateCategoryUseCaseInt(unittest.TestCase):
         self.assertEqual(entity.name, 'Category 1')
         self.assertIsNone(entity.description)
         self.assertTrue(entity.is_active)
+        
+        
+        input_param = CreateCategoryUseCase.Input(
+            name='Movie2',
+            description='some description'
+        )
+        output = self.use_case.execute(input_param)
+        entity = self.repo.find_by_id(output.id)
+
+        self.assertEqual(output, CreateCategoryUseCase.Output(
+            id=entity.id,
+            name='Movie2',
+            description='some description',
+            is_active=True,
+            created_at=entity.created_at
+        ))
+        self.assertEqual(entity.name, 'Movie2')
+        self.assertEqual(entity.description, 'some description')
+        self.assertTrue(entity.is_active)
+
+        input_param = CreateCategoryUseCase.Input(
+            name='Movie3',
+            description='some description --',
+            is_active=True
+        )
+        output = self.use_case.execute(input_param)
+        entity = self.repo.find_by_id(output.id)
+
+        self.assertEqual(output, CreateCategoryUseCase.Output(
+            id=entity.id,
+            name='Movie3',
+            description='some description --',
+            is_active=True,
+            created_at=entity.created_at
+        ))
+        self.assertEqual(entity.name, 'Movie3')
+        self.assertEqual(entity.description, 'some description --')
+        self.assertTrue(entity.is_active)
+
+        input_param = CreateCategoryUseCase.Input(
+            name='Movie4',
+            description='some description ##',
+            is_active=False
+        )
+        output = self.use_case.execute(input_param)
+        entity = self.repo.find_by_id(output.id)
+
+        self.assertEqual(output, CreateCategoryUseCase.Output(
+            id=entity.id,
+            name='Movie4',
+            description='some description ##',
+            is_active=False,
+            created_at=entity.created_at
+        ))
+        self.assertEqual(entity.name, 'Movie4')
+        self.assertEqual(entity.description, 'some description ##')
+        self.assertFalse(entity.is_active)
