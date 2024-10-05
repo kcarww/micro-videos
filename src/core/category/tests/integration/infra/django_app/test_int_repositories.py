@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import unittest
 
 import pytest
@@ -141,7 +141,7 @@ class TestCategoryDjangoRepositoryInt(unittest.TestCase):
         models = baker.make(
             CategoryModel,
             _quantity=16,
-            created_at=seq(datetime.now(), datetime.timedelta(days=1))
+            created_at=seq(datetime.now(), timedelta(days=1))
         )
         models.reverse()
 

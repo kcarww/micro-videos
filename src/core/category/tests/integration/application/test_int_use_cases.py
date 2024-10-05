@@ -1,0 +1,35 @@
+import unittest
+import pytest
+
+from core.category.application.use_cases import CreateCategoryUseCase
+from core.category.infra.django_app.repositories import CategoryDjangoRepository
+
+
+
+@pytest.mark.django_db
+class TestCreateCategoryUseCaseInt(unittest.TestCase):
+    use_case: CreateCategoryUseCase
+    repo: CategoryDjangoRepository
+    
+    
+    def setUp(self):
+        self.repo = CategoryDjangoRepository()
+        self.use_case = CreateCategoryUseCase(self.repo)
+        
+    def test_execute(self):
+        input_param = CreateCategoryUseCase.Input(name='Category 1')
+        output = self.use_case.execute(input_param)
+
+        entity = self.repo.find_by_id(output.id)
+        
+        self.assertEqual(output, CreateCategoryUseCase.Output(
+            id = entity.id,
+            name = 'Category 1',
+            description = None,
+            is_active = True,
+            created_at = entity.created_at
+        ))
+        
+        self.assertEqual(entity.name, 'Category 1')
+        self.assertIsNone(entity.description)
+        self.assertTrue(entity.is_active)
