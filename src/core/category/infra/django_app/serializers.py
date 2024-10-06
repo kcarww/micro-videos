@@ -1,7 +1,5 @@
 from rest_framework import serializers, ISO_8601
 
-from core.category.application.dto import CategoryOutput
-
 class CategorySerializer(serializers.Serializer):
     id = serializers.UUIDField(read_only=True)
     name = serializers.CharField()

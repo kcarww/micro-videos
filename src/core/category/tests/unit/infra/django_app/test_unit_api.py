@@ -1,3 +1,4 @@
+from collections import namedtuple
 from datetime import datetime
 import unittest
 from unittest import mock
@@ -14,6 +15,7 @@ from rest_framework.test import APIRequestFactory
 from rest_framework.request import Request
 
 from core.category.infra.django_app.serializers import CategorySerializer
+from core.category.tests.helpers import init_category_resource_all_none
 
 
 class StubCategorySerializer:
@@ -24,27 +26,41 @@ class StubCategorySerializer:
 
 
 class TestCategoryResourceUnit(unittest.TestCase):
-    
-    def test_post_method(self):
+
+    @mock.patch.object(CategorySerializer, '__new__')
+    def test_category_to_response(self, mock_serializer):
+        mock_serializer.return_value = namedtuple(
+            'Faker', ['data'])(data='test')
+        data = CategoryResource.category_to_output('output')
+        mock_serializer.assert_called_with(
+            CategorySerializer, instance='output')
+        self.assertEqual(data, 'test')
+
+    @mock.patch.object(CategoryResource, 'category_to_response')
+    def test_post_method(self, mock_category_to_response):
         stub_serializer = StubCategorySerializer()
         send_data = {'name': 'movie'}
-
+        expected_response = {
+            'id': 'c31d3c48-9a2d-42d0-9c5f-400249e5556b',
+            'name': 'movie',
+            'description': None,
+            'is_active': True,
+            'created_at': datetime.now()
+        }
         with mock.patch.object(CategorySerializer, '__new__', return_value=stub_serializer) as mock_serializer:
             stub_serializer.validated_data = send_data
             stub_serializer.is_valid = mock.MagicMock()
-            
+
             mock_create_use_case = mock.Mock(CreateCategoryUseCase)
             mock_create_use_case.execute.return_value = CreateCategoryUseCase.Output(
-                id='c31d3c48-9a2d-42d0-9c5f-400249e5556b',
-                name='movie',
-                description=None,
-                is_active=True,
-                created_at=datetime.now()
+                **expected_response
             )
+
+            mock_category_to_response.return_value = expected_response
 
             resource = CategoryResource(
                 **{
-                    **self.__init_all_none(),
+                    **init_category_resource_all_none(),
                     'create_use_case': lambda: mock_create_use_case
                 }
             )
@@ -57,13 +73,15 @@ class TestCategoryResourceUnit(unittest.TestCase):
             mock_create_use_case.execute.assert_called_with(CreateCategoryUseCase.Input(
                 name='movie'
             ))
+            mock_category_to_response.assert_called_with(
+                mock_create_use_case.execute.return_value)
             self.assertEqual(response.status_code, 201)
             self.assertEqual(response.data, {
                 'id': 'c31d3c48-9a2d-42d0-9c5f-400249e5556b',
                 'name': 'movie',
                 'description': None,
                 'is_active': True,
-                'created_at': mock_create_use_case.execute.return_value.created_at
+                'created_at': expected_response['created_at']
             })
         mock_serializer.assert_called_with(CategorySerializer, data=send_data)
 
@@ -88,7 +106,7 @@ class TestCategoryResourceUnit(unittest.TestCase):
 
         resource = CategoryResource(
             **{
-                **self.__init_all_none(),
+                **init_category_resource_all_none(),
                 'list_use_case': lambda: mock_list_use_case,
             }
         )
@@ -123,7 +141,7 @@ class TestCategoryResourceUnit(unittest.TestCase):
         })
 
     def test_if_get_invoke_get_object(self):
-        resource = CategoryResource(**self.__init_all_none())
+        resource = CategoryResource(**init_category_resource_all_none())
         resource.get_object = mock.Mock()
         resource.get(None, 'af46842e-027d-4c91-b259-3a3642144ba4')
         resource.get_object.assert_called_with(
@@ -142,7 +160,7 @@ class TestCategoryResourceUnit(unittest.TestCase):
 
         resource = CategoryResource(
             **{
-                **self.__init_all_none(),
+                **init_category_resource_all_none(),
                 'get_use_case': lambda: mock_get_use_case
             }
         )
@@ -152,11 +170,14 @@ class TestCategoryResourceUnit(unittest.TestCase):
             id='c31d3c48-9a2d-42d0-9c5f-400249e5556b'
         ))
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data, {'id': 'c31d3c48-9a2d-42d0-9c5f-400249e5556b',
-                                         'name': 'movie',
-                                         'description': None,
-                                         'is_active': True,
-                                         'created_at': mock_get_use_case.execute.return_value.created_at})
+        self.assertEqual(response.data, {
+            'id': 'c31d3c48-9a2d-42d0-9c5f-400249e5556b',
+            'name': 'movie',
+            'description': None,
+            'is_active': True,
+            'created_at': mock_get_use_case.execute.return_value.created_at
+        }
+        )
 
     def test_put__method(self):
         send_data = {
@@ -175,7 +196,7 @@ class TestCategoryResourceUnit(unittest.TestCase):
 
         resource = CategoryResource(
             **{
-                **self.__init_all_none(),
+                **init_category_resource_all_none(),
                 'update_use_case': lambda: mock_put_use_case
             }
         )
@@ -200,7 +221,7 @@ class TestCategoryResourceUnit(unittest.TestCase):
 
         resource = CategoryResource(
             **{
-                **self.__init_all_none(),
+                **init_category_resource_all_none(),
                 'delete_use_case': lambda: mock_delete_use_case
             }
         )

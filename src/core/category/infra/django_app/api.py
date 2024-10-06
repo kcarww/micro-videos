@@ -31,7 +31,7 @@ class CategoryResource(APIView):
         
         input_param = CreateCategoryUseCase.Input(**serializer.validated_data)
         output = self.create_use_case().execute(input_param)
-        body = CategoryResource.category_to_output(output)
+        body = CategoryResource.category_to_response(output)
         return Response(body, status=status.HTTP_201_CREATED)
 
     def get(self, request: Request, id: str = None):
@@ -45,7 +45,7 @@ class CategoryResource(APIView):
     def get_object(self, id: str):
         input_param = GetCategoryUseCase.Input(id)
         output_param = self.get_use_case().execute(input_param)
-        body = CategoryResource.category_to_output(output_param)
+        body = CategoryResource.category_to_response(output_param)
         return Response(body)
 
     def put(self, request: Request, id: str):
@@ -56,7 +56,7 @@ class CategoryResource(APIView):
         input_param = UpdateCategoryUseCase.Input(
             **{'id': id,  **serializer.validated_data})
         output_param = self.update_use_case().execute(input_param)
-        body = CategoryResource.category_to_output(output_param)
+        body = CategoryResource.category_to_response(output_param)
         return Response(body)
 
     def delete(self, _request: Request, id: str):
@@ -66,6 +66,6 @@ class CategoryResource(APIView):
 
     
     @staticmethod
-    def category_to_output(output: CategoryOutput):
+    def category_to_response(output: CategoryOutput):
         serializer = CategorySerializer(instance=output)
         return serializer.data

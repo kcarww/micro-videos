@@ -9,6 +9,8 @@ from core.category.tests.fixture.categories_api_fixture import (
     HttpExpect
 )
 from django_app import container
+from core.category.tests.helpers import init_category_resource_all_none
+
 
 @pytest.mark.django_db
 class TestCategoryResourcePostMethodInt:
@@ -18,13 +20,12 @@ class TestCategoryResourcePostMethodInt:
     @classmethod
     def setup_class(cls):
         cls.repo = CategoryDjangoRepository()
-        
+
         cls.resource = CategoryResource(
-            create_use_case=container.use_case_category_create_category,
-            update_use_case=None,
-            get_use_case=None,
-            list_use_case=None,
-            delete_use_case=None
+            **{
+                **init_category_resource_all_none(),
+                'create_use_case': container.use_case_category_create_category,
+            }
         )
 
     @pytest.mark.parametrize('http_expect', CategoryApiFixture.arrange_for_save())
@@ -37,14 +38,10 @@ class TestCategoryResourcePostMethodInt:
         assert response.status_code == 201
         assert CategoryApiFixture.keys_in_category_response() == list(response.data.keys())
         category_created = self.repo.find_by_id(response.data['id'])
-        assert response.data == {
-            'id': category_created.id,
-            'name': category_created.name,
-            'description': category_created.description,
-            'is_active': category_created.is_active,
-            'created_at': category_created.created_at
-        }
+        serializer = CategoryResource.category_to_response(category_created)
+        assert response.data == serializer
 
-        expected_data = {**http_expect.request.body, **http_expect.response.body}
+        expected_data = {**http_expect.request.body,
+                         **http_expect.response.body}
         for key, value in expected_data.items():
             assert response.data[key] == value
