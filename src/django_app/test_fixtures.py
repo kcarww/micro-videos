@@ -7,5 +7,4 @@ def num_seq():
 
 
 def test_xpto(num_seq):
-    print(num_seq)
     assert 1 in num_seq

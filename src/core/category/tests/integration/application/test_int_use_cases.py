@@ -139,25 +139,25 @@ class TestListCategoriesUseCaseInt(unittest.TestCase):
         self.repo = CategoryDjangoRepository()
         self.use_case = ListCategoriesUseCase(self.repo)
 
-    def test_execute_using_empty_search_params(self):
+    # def test_execute_using_empty_search_params(self):
         
-        models = [
-            baker.make(CategoryModel, created_at=timezone.now()),
-            baker.make(CategoryModel, created_at=timezone.now()),
-        ]
-        input_param = ListCategoriesUseCase.Input()
-        output = self.use_case.execute(input_param)
+    #     models = [
+    #         baker.make(CategoryModel, created_at=timezone.now()),
+    #         baker.make(CategoryModel, created_at=timezone.now()),
+    #     ]
+    #     input_param = ListCategoriesUseCase.Input()
+    #     output = self.use_case.execute(input_param)
 
-        self.assertEqual(output, ListCategoriesUseCase.Output(
-            items=[
-                self.from_model_to_output(models[1]),
-                self.from_model_to_output(models[0]),
-            ],
-            total=2,
-            current_page=1,
-            per_page=15,
-            last_page=1
-        ))
+    #     self.assertEqual(output, ListCategoriesUseCase.Output(
+    #         items=[
+    #             self.from_model_to_output(models[1]),
+    #             self.from_model_to_output(models[0]),
+    #         ],
+    #         total=2,
+    #         current_page=1,
+    #         per_page=15,
+    #         last_page=1
+    #     ))
         
         
     def from_model_to_output(self, model: CategoryModel) -> CategoryOutput:

@@ -1,14 +1,17 @@
 from core.__seedwork.domain.exceptions import EntityValidationException, LoadEntityException
 from core.__seedwork.domain.value_objects import UniqueEntityId
 from core.category.domain.entities import Category
-from core.category.infra.django_app.models import CategoryModel
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from core.category.infra.django_app.models import CategoryModel
 
 
 class CategoryModelMapper:
     
     
     @staticmethod
-    def to_entity(model: CategoryModel) -> Category:
+    def to_entity(model: 'CategoryModel') -> Category:
         try:
             return Category(
             unique_entity_id=UniqueEntityId(str(model.id)),
@@ -22,6 +25,7 @@ class CategoryModelMapper:
     
     
     @staticmethod
-    def to_model(category: Category) -> CategoryModel:
+    def to_model(category: Category) -> 'CategoryModel':
+        from core.category.infra.django_app.models import CategoryModel
         return CategoryModel(**category.to_dict())
     

@@ -1,5 +1,5 @@
 {
-    "python.defaultInterpreterPath": "${workspaceFolder}/.venv/Scripts/python",
+    "python.defaultInterpreterPath": "C:/Users/kcarw/AppData/Local/pdm/pdm/venvs/micro-videos-2jvG20KW-venv/Scripts/python",
     "python.analysis.extraPaths": [
         "${workspaceFolder}/src",
         "${workspaceFolder}/__pypackages__/3.10/lib"
@@ -22,8 +22,8 @@
     "python.testing.autoTestDiscoverOnSaveEnabled": true,
     "terminal.integrated.env.windows": {
         "PYTHONPATH": "${workspaceFolder}/src",
-        
-
+        "DJANGO_SETTINGS_MODULE": "django_app.settings"
+    
     },
     "python.languageServer": "Pylance",
     "editor.quickSuggestions": {
