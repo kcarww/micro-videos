@@ -1,9 +1,9 @@
-GET http://localhost:8000/categories?page=1
+GET http://localhost:8000/categories
 
 ###
 
 
-GET http://localhost:8000/categories/03ccd350-fffd-4194-ada4-8ff77e0e0399
+GET http://localhost:8000/categories/f6e70586-a265-439e-9424-340adda215f9
 
 ###
 
@@ -12,21 +12,21 @@ POST http://localhost:8000/categories
 Content-Type: application/json
 
 {
-  "name": "movie"
+  "name": "movie via post"
 }
 
 
 ###
 
 
-PUT http://localhost:8000/categories/03ccd350-fffd-4194-ada4-8ff77e0e0399
+PUT http://localhost:8000/categories/f6e70586-a265-439e-9424-340adda215f9
 Content-Type: application/json
 
 {
-  "name": "movie 2",
+  "name": "movie editado",
   "description": "movie 2 description"
 }
 
 ###
 
-DELETE http://localhost:8000/categories/03ccd350-fffd-4194-ada4-8ff77e0e0399
+DELETE http://localhost:8000/categories/f6e70586-a265-439e-9424-340adda215f9
