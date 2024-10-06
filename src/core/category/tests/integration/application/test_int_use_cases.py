@@ -147,6 +147,7 @@ class TestListCategoriesUseCaseInt(unittest.TestCase):
         ]
         input_param = ListCategoriesUseCase.Input()
         output = self.use_case.execute(input_param)
+
         self.assertEqual(output, ListCategoriesUseCase.Output(
             items=[
                 self.from_model_to_output(models[1]),
