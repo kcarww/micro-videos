@@ -2,6 +2,8 @@
 from dataclasses import dataclass
 from typing import Any
 
+import pytest
+
 
 @dataclass
 class Request:
@@ -33,7 +35,7 @@ class CategoryApiFixture:
 
     @staticmethod
     def arrange_for_save():
-        return [
+        data = [
             HttpExpect(
                 request=Request(body={'name': 'Movie'}),
                 response=Response(
@@ -57,3 +59,4 @@ class CategoryApiFixture:
                 )
             )
         ]
+        return [pytest.param(item, id=str(item.request.body)) for item in data]

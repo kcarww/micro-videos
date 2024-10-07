@@ -31,7 +31,7 @@ class TestCategoryResourceUnit(unittest.TestCase):
     def test_category_to_response(self, mock_serializer):
         mock_serializer.return_value = namedtuple(
             'Faker', ['data'])(data='test')
-        data = CategoryResource.category_to_output('output')
+        data = CategoryResource.category_to_response('output')
         mock_serializer.assert_called_with(
             CategorySerializer, instance='output')
         self.assertEqual(data, 'test')
@@ -234,11 +234,3 @@ class TestCategoryResourceUnit(unittest.TestCase):
         ))
         self.assertEqual(response.status_code, 204)
 
-    def __init_all_none(self):
-        return {
-            'list_use_case': None,
-            'create_use_case': None,
-            'get_use_case': None,
-            'update_use_case': None,
-            'delete_use_case': None
-        }
