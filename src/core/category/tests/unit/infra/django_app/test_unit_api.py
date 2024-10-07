@@ -2,6 +2,7 @@ from collections import namedtuple
 from datetime import datetime
 import unittest
 from unittest import mock
+from core.__seedwork.infra.serializers import UUIDSerializer
 from core.category.application.dto import CategoryOutput
 from core.category.application.use_cases import (
     CreateCategoryUseCase,
@@ -35,6 +36,17 @@ class TestCategoryResourceUnit(unittest.TestCase):
         mock_serializer.assert_called_with(
             CategorySerializer, instance='output')
         self.assertEqual(data, 'test')
+        
+        
+    @mock.patch.object(UUIDSerializer, '__new__')
+    def test_validate_id_method(self, mock_serializer):
+        mock_serializer_is_valid = mock.MagicMock()
+        mock_serializer.return_value = namedtuple(
+            'Fake', ['is_valid'])(is_valid=mock_serializer_is_valid)
+        
+        CategoryResource.validate_id('fake id')
+        mock_serializer.assert_called_with(UUIDSerializer, data={'id': 'fake id'})
+        mock_serializer_is_valid.assert_called_with(raise_exception=True)
 
     @mock.patch.object(CategoryResource, 'category_to_response')
     def test_post_method(self, mock_category_to_response):
