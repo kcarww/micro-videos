@@ -14,7 +14,7 @@ from rest_framework.views import APIView
 from rest_framework import status
 
 from core.category.infra.django_app.serializers import CategorySerializer
-
+from core.__seedwork.infra.serializers import UUIDSerializer
 
 @dataclass(slots=True)
 class CategoryResource(APIView):
@@ -43,13 +43,14 @@ class CategoryResource(APIView):
         return Response(asdict(outpu_param))
 
     def get_object(self, id: str):
+        CategoryResource.validate_id(id)
         input_param = GetCategoryUseCase.Input(id)
         output_param = self.get_use_case().execute(input_param)
         body = CategoryResource.category_to_response(output_param)
         return Response(body)
 
     def put(self, request: Request, id: str):
-        
+        CategoryResource.validate_id(id)
         serializer = CategorySerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         
@@ -60,6 +61,7 @@ class CategoryResource(APIView):
         return Response(body)
 
     def delete(self, _request: Request, id: str):
+        CategoryResource.validate_id(id)
         input_param = DeleteCategoryUseCase.Input(id=id)
         self.delete_use_case().execute(input_param)
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -69,3 +71,8 @@ class CategoryResource(APIView):
     def category_to_response(output: CategoryOutput):
         serializer = CategorySerializer(instance=output)
         return serializer.data
+    
+    @staticmethod
+    def validate_id(id: str):
+        serializer = UUIDSerializer(data={'id': id})
+        serializer.is_valid(raise_exception=True)
