@@ -1,6 +1,5 @@
 
 import pytest
-from django.forms import ValidationError
 from rest_framework.exceptions import ErrorDetail, ValidationError
 from django.utils import timezone
 from core.category.application.dto import CategoryOutput
@@ -45,8 +44,6 @@ class TestCategoryResourceCommonMethodsInt:
     def test_validate_id(self):
         with pytest.raises(ValidationError)as assert_exception:
             CategoryResource.validate_id('fake id')
-        print(assert_exception, '---------------')
-
         expected_error = {
             'id': [ErrorDetail(string='Must be a valid UUID.', code='invalid')]
         }
