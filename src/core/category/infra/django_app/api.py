@@ -9,12 +9,13 @@ from core.category.application.use_cases import (
     ListCategoriesUseCase,
     UpdateCategoryUseCase
 )
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 from rest_framework.views import APIView
 from rest_framework import status
 
-from core.category.infra.django_app.serializers import CategorySerializer
-from core.__seedwork.infra.serializers import UUIDSerializer
+from core.__seedwork.infra.django_app.serializers import UUIDSerializer
+from core.category.infra.django_app.serializers import CategoryCollectionSerializer, CategorySerializer
+
 
 @dataclass(slots=True)
 class CategoryResource(APIView):
@@ -25,10 +26,10 @@ class CategoryResource(APIView):
     delete_use_case: Callable[[], DeleteCategoryUseCase]
 
     def post(self, request: Request):
-        
+
         serializer = CategorySerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        
+
         input_param = CreateCategoryUseCase.Input(**serializer.validated_data)
         output = self.create_use_case().execute(input_param)
         body = CategoryResource.category_to_response(output)
@@ -39,8 +40,10 @@ class CategoryResource(APIView):
             return self.get_object(id)
         input_param = ListCategoriesUseCase.Input(
             **request.query_params.dict())
-        outpu_param = self.list_use_case().execute(input_param)
-        return Response(asdict(outpu_param))
+        output_param = self.list_use_case().execute(input_param)
+        data = CategoryCollectionSerializer(
+            instance=output_param).data
+        return Response(data)
 
     def get_object(self, id: str):
         CategoryResource.validate_id(id)
@@ -53,7 +56,7 @@ class CategoryResource(APIView):
         CategoryResource.validate_id(id)
         serializer = CategorySerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        
+
         input_param = UpdateCategoryUseCase.Input(
             **{'id': id,  **serializer.validated_data})
         output_param = self.update_use_case().execute(input_param)
@@ -66,12 +69,11 @@ class CategoryResource(APIView):
         self.delete_use_case().execute(input_param)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    
     @staticmethod
     def category_to_response(output: CategoryOutput):
         serializer = CategorySerializer(instance=output)
         return serializer.data
-    
+
     @staticmethod
     def validate_id(id: str):
         serializer = UUIDSerializer(data={'id': id})
