@@ -38,7 +38,7 @@ class TestCategoryResourceGetObjectMethodInt:
         assert error_message == f"Entity not found using ID '{uuid_value}'"
         
     def test_get_object_method(self):
-        category = Category(name='Movie')
+        category = Category.fake().a_category().build()
         self.repo.insert(category)
         response = self.resource.get_object(category.id)
         

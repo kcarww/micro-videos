@@ -8,7 +8,8 @@ from core.category.domain.entities import Category
 T = TypeVar('T')
 
 PropOrFactory = T | Callable[[int], T]
-
+# pylint: disable = broad-exception-raised
+# pylint: disable = too-many-public-methods
 
 @dataclass
 class CategoryFakerBuilder(Generic[T]):
