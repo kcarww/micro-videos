@@ -135,7 +135,6 @@ class TestCategoryResourceUnit(unittest.TestCase):
             filter='test'
         ))
         self.assertEqual(response.status_code, 200)
-        print('------------------',response.data)
         # self.assertEqual(response.data, {
         #     'items': [
         #         {
