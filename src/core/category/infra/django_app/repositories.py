@@ -27,6 +27,13 @@ class CategoryDjangoRepository(CategoryRepository):
     def insert(self, entity: Category) -> None:
         model = CategoryModelMapper.to_model(entity)
         model.save()
+        
+    def bulk_insert(self, entities: List[Category]) -> None:
+        self.model.objects.bulk_create(
+            list(map(
+                CategoryModelMapper.to_model, entities
+            ))
+        )
 
     def find_by_id(self, entity_id: str | UniqueEntityId) -> Category:
         id_str = str(entity_id)
