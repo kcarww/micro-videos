@@ -193,3 +193,89 @@ class CategoryApiFixture:
             )
         ]
         return [pytest.param(item, id=str(item.request.body)) for item in data]
+
+
+class CreateCategoryApiFixture:
+
+    @staticmethod
+    def arrange_for_invalid_requests():
+        fixture = CategoryInvalidBodyFixture.arrange()
+        return [
+            pytest.param(fixture.body_empty, id='body_empty'),
+            pytest.param(fixture.name_none, id='name_none'),
+            pytest.param(fixture.name_empty, id='name_empty'),
+            pytest.param(fixture.is_active_none, id='is_active_none'),
+            pytest.param(fixture.is_active_empty, id='is_active_empty'),
+            pytest.param(fixture.is_active_not_a_bool,
+                         id='is_active_not_a_bool'),
+        ]
+
+    @staticmethod
+    def arrange_for_entity_validation_error():
+        fixture = CategoryEntityValidationErrorFixture.arrange()
+        return [
+            pytest.param(fixture.name_empty, id='name_empty'),
+            pytest.param(fixture.name_none, id='name_none'),
+            pytest.param(fixture.name_not_a_str, id='name_not_a_str'),
+            pytest.param(fixture.name_too_long, id='name_too_long'),
+            pytest.param(fixture.description_not_a_str,
+                         id='description_not_a_str'),
+            pytest.param(fixture.is_active_empty, id='is_active_empty'),
+            pytest.param(fixture.is_active_not_a_bool,
+                         id='is_active_not_a_bool'),
+        ]
+
+    @staticmethod
+    def keys_in_category_response():
+        return CategoryApiFixture.keys_in_category_response()
+
+    @staticmethod
+    def arrange_for_save():
+        faker = Category.fake().a_category()\
+            .with_name('Movie')\
+            .with_description('description test')
+
+        data = [
+            HttpExpect(
+                request=Request(body={'name': faker.name}),
+                response=Response(body={
+                    'name': faker.name,
+                    'description': None,
+                    'is_active': True,
+                })
+            ),
+            HttpExpect(
+                request=Request(body={
+                    'name': faker.name,
+                    'description': faker.description,
+                }),
+                response=Response(body={
+                    'name': faker.name,
+                    'description': faker.description,
+                    'is_active': True,
+                })
+            ),
+            HttpExpect(
+                request=Request(body={
+                    'name': faker.name,
+                    'is_active': True
+                }),
+                response=Response(body={
+                    'name': faker.name,
+                    'description': None,
+                    'is_active': True,
+                })
+            ),
+            HttpExpect(
+                request=Request(body={
+                    'name': faker.name,
+                    'is_active': False
+                }),
+                response=Response(body={
+                    'name': faker.name,
+                    'description': None,
+                    'is_active': False,
+                })
+            )
+        ]
+        return [pytest.param(item, id=str(item.request.body)) for item in data]
